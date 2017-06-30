@@ -6,6 +6,14 @@ package org.song.refreshlayout;
  */
 
 public interface IRefreshView {
-    boolean isMovingForTouch();
+
+    boolean isMoveTarget();//是否listview要移动
+
+    void updateStatus(int Status);//更新刷新状态
+
+    void updateProgress(float progress);//刷新进度0~1
+
+    int triggerDistance();//触发刷新的距离
+
 
 }
