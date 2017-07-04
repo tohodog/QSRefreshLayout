@@ -14,7 +14,7 @@ public class Floatview extends FrameLayout implements IRefreshView {
     public Floatview(Context context) {
         super(context);
         setLayoutParams(new LayoutParams(100, 100));
-        setBackgroundColor(Color.YELLOW);
+        setBackgroundColor(Color.CYAN);
     }
 
     @Override
@@ -28,7 +28,13 @@ public class Floatview extends FrameLayout implements IRefreshView {
     }
 
     @Override
-    public void updateStatus(int Status) {
+    public void updateStatus(int status) {
+        if (status == 2)
+            setBackgroundColor(Color.YELLOW);
+        else if (status == 3)
+            setBackgroundColor(Color.BLUE);
+        else setBackgroundColor(Color.CYAN);
+
 
     }
 
@@ -38,12 +44,17 @@ public class Floatview extends FrameLayout implements IRefreshView {
     }
 
     @Override
+    public int maxDistance() {
+        return 300;
+    }
+
+    @Override
     public int triggerDistance() {
         return getLayoutParams().height;
     }
 
     @Override
     public int getOffsetFormat(int offset) {
-        return (int) (offset/0.7f);
+        return (int) (offset / 0.7f);
     }
 }

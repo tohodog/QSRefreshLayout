@@ -43,6 +43,11 @@ public class Bview  extends FrameLayout implements IRefreshView {
     }
 
     @Override
+    public int maxDistance() {
+        return 300;
+    }
+
+    @Override
     public int getOffsetFormat(int offset) {
         return offset;
     }

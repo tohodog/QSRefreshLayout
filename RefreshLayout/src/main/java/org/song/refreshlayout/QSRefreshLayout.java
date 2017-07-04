@@ -4,9 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.AbsListView;
-import android.widget.GridView;
 
 /**
  * Created by song on 2017/7/3.
@@ -129,6 +127,6 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     }
 
     public interface RefreshListener {
-        void changeStatus(boolean isHerd, int status);
+        void changeStatus(boolean isHeadRefresh, int status);
     }
 }

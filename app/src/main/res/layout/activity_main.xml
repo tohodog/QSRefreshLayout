@@ -6,11 +6,12 @@
     android:layout_height="match_parent">
 
     <org.song.refreshlayout.QSRefreshLayout
-        android:padding="12dp"
+        android:id="@+id/qs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <ListView
+            android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/colorAccent">

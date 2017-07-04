@@ -3,22 +3,19 @@ package org.song.refreshlayout;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.Transformation;
 
 import static android.support.v4.widget.ViewDragHelper.INVALID_POINTER;
 
 /**
+ * 轻松刷新
  * Created by song on 2017/6/30.
  */
 
@@ -55,7 +52,6 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     public QSBaseRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        Log.e("=====",""+touchSlop);
     }
 
     @Override//确定子view大小
@@ -89,7 +85,10 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         int bottom = getPaddingBottom();
 
         //滑动控件强制match 无视它的属性
-        mTarget.layout(left, top + currentOffset, left + width - right, top + height - bottom + currentOffset);
+        if (draggedRefreshView != null && draggedRefreshView.isMoveTarget())
+            mTarget.layout(left, top + currentOffset, left + width - right, top + height - bottom + currentOffset);
+        else
+            mTarget.layout(left, top, left + width - right, top + height - bottom);
 
         if (headRefreshView != null) {
             View child = headRefreshView.getView();
@@ -160,7 +159,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 float xDiff = x - mInitialMotionX;
                 if (!isHead)
                     yDiff = -yDiff;
-                if (yDiff > touchSlop & Math.abs(yDiff) > Math.abs(xDiff)) {
+                if (yDiff > touchSlop && Math.abs(yDiff) > Math.abs(xDiff)) {
                     mIsBeingDragged = true;
                 }
                 break;
@@ -169,7 +168,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 mIsBeingDragged = false;
                 mActivePointerId = INVALID_POINTER;
                 break;
-            case MotionEventCompat.ACTION_POINTER_UP://兼容多个手指
+            case MotionEvent.ACTION_POINTER_UP://兼容多个手指
                 final int pointerIndex = ev.getActionIndex();
                 final int pointerId = ev.getPointerId(pointerIndex);
                 if (pointerId == mActivePointerId) {
@@ -187,7 +186,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             return super.onTouchEvent(ev);
         }
 
-        final int action = MotionEventCompat.getActionMasked(ev);
+        final int action = ev.getActionMasked();
 
         switch (action) {
             case MotionEvent.ACTION_MOVE: {
@@ -198,30 +197,32 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 final float y = ev.getY(pointerIndex);
                 final float yDiff = y - mInitialMotionY;
                 float scrollTop = yDiff * dragRate;
-
+                //防止拖回去
                 if (draggedRefreshView == headRefreshView) {
                     if (scrollTop < 0)
                         scrollTop = 0;
-                    if (scrollTop > draggedRefreshView.triggerDistance())
-                        setRefreshStatus(STATUS_DRAGGING_REACH);
-                    else
-                        setRefreshStatus(STATUS_DRAGGING);
                 } else {
                     if (scrollTop > 0)
                         scrollTop = 0;
-                    if (-scrollTop > draggedRefreshView.triggerDistance())
-                        setRefreshStatus(STATUS_DRAGGING_REACH);
-                    else
-                        setRefreshStatus(STATUS_DRAGGING);
                 }
+                //scrollview滚动的距离按照
+                int tempScrollTop = (int) scrollTop;
+                if (!draggedRefreshView.isMoveTarget())
+                    tempScrollTop = draggedRefreshView.getOffsetFormat(tempScrollTop);
+                if (Math.abs(tempScrollTop) > draggedRefreshView.triggerDistance())
+                    setRefreshStatus(STATUS_DRAGGING_REACH);
+                else
+                    setRefreshStatus(STATUS_DRAGGING);
                 setDragViewOffsetAndPro((int) scrollTop, false);
                 break;
             }
-            case MotionEventCompat.ACTION_POINTER_DOWN:
+
+            case MotionEvent.ACTION_POINTER_DOWN:
                 final int index = ev.getActionIndex();
                 mActivePointerId = ev.getPointerId(index);
                 break;
-            case MotionEventCompat.ACTION_POINTER_UP:
+
+            case MotionEvent.ACTION_POINTER_UP:
                 final int pointerIndex = ev.getActionIndex();
                 final int pointerId = ev.getPointerId(pointerIndex);
                 if (pointerId == mActivePointerId) {
@@ -229,32 +230,20 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     mActivePointerId = ev.getPointerId(newPointerIndex);
                 }
                 break;
+
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL: {
-                if (mActivePointerId == INVALID_POINTER) {
+                if (mActivePointerId == INVALID_POINTER)
                     return false;
-                }
-                int pointerIndex1 = ev.findPointerIndex(mActivePointerId);
-                float y = ev.getY(pointerIndex1);
-                float overScrollTop = (y - mInitialMotionY) * dragRate;
                 int triggerDistance = draggedRefreshView.triggerDistance();
-
-                if (draggedRefreshView == headRefreshView) {
-                    if (overScrollTop > triggerDistance) {
-                        setRefreshStatus(STATUS_REFRESHING);//刷新
-                        scrollAnimation(currentOffset, triggerDistance, false);
-                    } else {//距离不够取消刷新
-                        scrollAnimation(currentOffset, 0, true);
-                    }
-                } else {
-                    if (-overScrollTop > triggerDistance) {
-                        setRefreshStatus(STATUS_REFRESHING);//刷新
-                        scrollAnimation(currentOffset, -triggerDistance, false);
-                    } else {//距离不够取消刷新
-                        scrollAnimation(currentOffset, 0, true);
-                    }
+                if (draggedRefreshView == footRefreshView)
+                    triggerDistance = -triggerDistance;
+                if (refreshStatus == STATUS_DRAGGING_REACH) {
+                    setRefreshStatus(STATUS_REFRESHING);//刷新
+                    scrollAnimation(currentOffset, triggerDistance, false);
+                } else if (refreshStatus == STATUS_DRAGGING) {//距离不够取消刷新
+                    scrollAnimation(currentOffset, 0, true);
                 }
-
                 mActivePointerId = INVALID_POINTER;
                 return false;
             }
@@ -267,17 +256,28 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     private void setDragViewOffsetAndPro(int offset, boolean requiresUpdate) {
         if (offset == currentOffset)
             return;
-        int temp1 = draggedRefreshView.getOffsetFormat(currentOffset);
-        int temp2 = draggedRefreshView.getOffsetFormat(offset);
+
+        int max = draggedRefreshView.maxDistance();
+        if (Math.abs(offset) > max)
+            offset = offset > 0 ? max : -max;
+        int temp = currentOffset;
         currentOffset = offset;
-        draggedRefreshView.getView().bringToFront();
-        draggedRefreshView.getView().offsetTopAndBottom(temp2 - temp1);
+
+        if (draggedRefreshView.isMoveTarget()) {//
+            mTarget.offsetTopAndBottom(offset);
+            int temp1 = draggedRefreshView.getOffsetFormat(temp);
+            int temp2 = draggedRefreshView.getOffsetFormat(offset);
+            draggedRefreshView.getView().offsetTopAndBottom(temp2 - temp1);
+        } else {
+            draggedRefreshView.getView().bringToFront();
+            draggedRefreshView.getView().offsetTopAndBottom(offset - temp);
+        }
+
         float pro = 1f * offset / draggedRefreshView.triggerDistance();
         if (pro < 0) pro = 0;
         if (pro > 1) pro = 1;
         draggedRefreshView.updateProgress(pro);
-        if (draggedRefreshView.isMoveTarget())
-            mTarget.offsetTopAndBottom(offset);
+
         if (requiresUpdate && android.os.Build.VERSION.SDK_INT < 11) {
             invalidate();
         }
