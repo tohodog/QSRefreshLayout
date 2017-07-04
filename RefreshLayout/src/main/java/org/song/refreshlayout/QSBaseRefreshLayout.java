@@ -264,7 +264,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         currentOffset = offset;
 
         if (draggedRefreshView.isMoveTarget()) {//
-            mTarget.offsetTopAndBottom(offset);
+            mTarget.offsetTopAndBottom(offset - temp);
             int temp1 = draggedRefreshView.getOffsetFormat(temp);
             int temp2 = draggedRefreshView.getOffsetFormat(offset);
             draggedRefreshView.getView().offsetTopAndBottom(temp2 - temp1);
