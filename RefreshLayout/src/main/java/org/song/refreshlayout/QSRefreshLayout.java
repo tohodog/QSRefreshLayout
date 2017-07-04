@@ -1,15 +1,21 @@
 package org.song.refreshlayout;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.AbsListView;
+import android.widget.GridView;
 
 /**
  * Created by song on 2017/7/3.
  */
 
 public class QSRefreshLayout extends QSBaseRefreshLayout {
+
+
+    private RefreshListener refreshListener;
 
     public QSRefreshLayout(Context context) {
         this(context, null);
@@ -18,9 +24,44 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
 
     public QSRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        initData();
     }
 
+    private void initData() {
+        setHeadRefreshView(new Floatview(getContext()));
+        setFootRefreshView(new Bview(getContext()));
+    }
+
+    public void setHeadRefreshView(IRefreshView headRefreshView) {
+        if (headRefreshView == null)
+            return;
+        this.headRefreshView = headRefreshView;
+        if (headRefreshView.isMoveTarget())
+            addView(headRefreshView.getView(), 0);
+        else
+            addView(headRefreshView.getView());
+
+        setOpenHeadRefresh(true);
+    }
+
+    public void setOpenHeadRefresh(boolean openHeadRefresh) {
+        isOpenHeadRefresh = openHeadRefresh;
+    }
+
+    public void setFootRefreshView(IRefreshView footRefreshView) {
+        if (headRefreshView == null)
+            return;
+        this.footRefreshView = footRefreshView;
+        if (footRefreshView.isMoveTarget())
+            addView(footRefreshView.getView(), 0);
+        else
+            addView(footRefreshView.getView());
+        setOpenFootRefresh(true);
+    }
+
+    public void setOpenFootRefresh(boolean openFootRefresh) {
+        isOpenFootRefresh = openFootRefresh;
+    }
 
     @Override
     protected View ensureTarget() {
@@ -38,11 +79,56 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
 
     @Override
     protected boolean canChildScrollUp() {
-        return false;
+        if (android.os.Build.VERSION.SDK_INT < 14) {
+            if (mTarget instanceof AbsListView) {
+                final AbsListView absListView = (AbsListView) mTarget;
+                return absListView.getChildCount() > 0
+                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
+                        .getTop() < absListView.getPaddingTop());
+            } else {
+                return ViewCompat.canScrollVertically(mTarget, -1) || mTarget.getScrollY() > 0;
+            }
+        } else {
+            return ViewCompat.canScrollVertically(mTarget, -1);
+        }
     }
 
     @Override
     protected boolean canChildScrollDown() {
-        return false;
+        if (android.os.Build.VERSION.SDK_INT < 14) {
+            if (mTarget instanceof AbsListView) {
+                final AbsListView absListView = (AbsListView) mTarget;
+                return absListView.getChildCount() > 0
+                        && (absListView.getLastVisiblePosition() < absListView.getCount() - 1 ||
+                        absListView.getChildAt(absListView.getChildCount() - 1).getBottom() <
+                                absListView.getHeight() - absListView.getPaddingBottom());
+            } else {
+                return ViewCompat.canScrollVertically(mTarget, 1);
+            }
+        } else {
+            return ViewCompat.canScrollVertically(mTarget, 1);
+        }
+    }
+
+    public void refreshComplete() {
+        scrollAnimation(currentOffset, 0, true);
+    }
+
+    public boolean isRefreshing() {
+        return refreshStatus == STATUS_REFRESHING;
+    }
+
+    @Override
+    protected void changeStatus(int status) {
+        if (refreshListener != null)
+            refreshListener.changeStatus(draggedRefreshView == headRefreshView, status);
+    }
+
+    public void setRefreshListener(RefreshListener refreshListener) {
+        this.refreshListener = refreshListener;
+    }
+
+    public interface RefreshListener {
+        void changeStatus(boolean isHerd, int status);
     }
 }

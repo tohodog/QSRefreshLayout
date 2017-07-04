@@ -3,19 +3,18 @@ package org.song.refreshlayout;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
  * Created by song on 2017/7/3.
  */
 
-public class RView extends FrameLayout implements IRefreshView {
+public class Floatview extends FrameLayout implements IRefreshView {
 
-    public RView(Context context) {
+    public Floatview(Context context) {
         super(context);
-        setLayoutParams(new FrameLayout.LayoutParams(-1, 100));
-        setBackgroundColor(Color.BLUE);
+        setLayoutParams(new LayoutParams(100, 100));
+        setBackgroundColor(Color.YELLOW);
     }
 
     @Override
@@ -45,6 +44,6 @@ public class RView extends FrameLayout implements IRefreshView {
 
     @Override
     public int getOffsetFormat(int offset) {
-        return offset;
+        return (int) (offset/0.7f);
     }
 }

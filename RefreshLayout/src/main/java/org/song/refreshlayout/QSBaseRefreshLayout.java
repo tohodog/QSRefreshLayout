@@ -28,26 +28,24 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     public static final int STATUS_DRAGGING = 1;
     public static final int STATUS_DRAGGING_REACH = 2;
     public static final int STATUS_REFRESHING = 3;
-    private int animaDuration = 300;
+    protected int animaDuration = 300;
 
-    private int refreshStatus;
+    protected int refreshStatus;
 
-    private float dragRate = 0.5f;//拖动速度
+    protected float dragRate = 0.7f;//拖动速度
 
     protected View mTarget;//滑动的view
-    private IRefreshView headRefreshView, footRefreshView;//刷新的view
-    private IRefreshView draggedRefreshView;//s
-    private boolean isHeadBeingDragged, isFootBeingDragged;//是否开始滑动刷新
+    protected IRefreshView headRefreshView, footRefreshView;//刷新的view
+    protected IRefreshView draggedRefreshView;//s
 
-    private Interpolator decelerateInterpolator = new DecelerateInterpolator(2F);
-    private int currentOffset;//刷新时拖动的间隔
+    protected Interpolator decelerateInterpolator = new DecelerateInterpolator(2F);
+    protected int currentOffset;//刷新时拖动的间隔
 
-    private boolean isToEdgeImmediatelyRefresh = true;//是否滚动到边缘可以立即触发刷新 不需要停一下
+    protected boolean isToEdgeImmediatelyRefresh = true;//是否滚动到边缘可以立即触发刷新 不需要停一下
 
-    private int touchSlop;//触发刷新的最小滑动距离
-
-    private boolean isOpenHeadRefresh = true;
-    private boolean isOpenFootRefresh = true;
+    protected int touchSlop;//触发刷新的最小滑动距离
+    protected boolean isOpenHeadRefresh;
+    protected boolean isOpenFootRefresh;
 
     public QSBaseRefreshLayout(Context context) {
         this(context, null);
@@ -57,8 +55,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     public QSBaseRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        headRefreshView = new RView(context);
-        addView(headRefreshView.getView());
+        Log.e("=====",""+touchSlop);
     }
 
     @Override//确定子view大小
@@ -114,7 +111,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
 
     @Override//判断是否截取事件进行刷新
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (!isEnabled() || !isNormal())
+        if (!isEnabled() || !isNormal() || mTarget == null)
             return false;
         boolean isHeadBeingDragged = false, isFootBeingDragged = false;
         if (isOpenHeadRefresh && !canChildScrollUp())
@@ -128,12 +125,11 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             draggedRefreshView = isHeadBeingDragged ? headRefreshView : footRefreshView;
             setRefreshStatus(STATUS_DRAGGING);
         }
-        Log.e("====", b + "");
         return b;
     }
 
     private int mActivePointerId;
-    private float mInitialMotionY;
+    private float mInitialMotionY, mInitialMotionX;
 
     //是否截取事件
     private boolean handlerInterceptTouchEvent(MotionEvent ev, boolean isHead) {
@@ -147,6 +143,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (initialMotionY == -1) {
                     return false;
                 }
+                mInitialMotionX = ev.getX(mActivePointerId);
                 mInitialMotionY = initialMotionY;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -154,13 +151,16 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     return false;
                 }
                 final float y = ev.getY(mActivePointerId);
+                final float x = ev.getX(mActivePointerId);
+
                 if (y == -1) {
                     return false;
                 }
                 float yDiff = y - mInitialMotionY;
+                float xDiff = x - mInitialMotionX;
                 if (!isHead)
                     yDiff = -yDiff;
-                if (yDiff > touchSlop) {
+                if (yDiff > touchSlop & Math.abs(yDiff) > Math.abs(xDiff)) {
                     mIsBeingDragged = true;
                 }
                 break;
@@ -181,9 +181,9 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         return mIsBeingDragged;
     }
 
-    @Override//判断是否截取事件进行刷新
+    @Override//拖曳view
     public boolean onTouchEvent(MotionEvent ev) {
-        if (!isBeingDragged()) {
+        if (!isBeingDragged() || mTarget == null || draggedRefreshView == null) {
             return super.onTouchEvent(ev);
         }
 
@@ -202,9 +202,17 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (draggedRefreshView == headRefreshView) {
                     if (scrollTop < 0)
                         scrollTop = 0;
+                    if (scrollTop > draggedRefreshView.triggerDistance())
+                        setRefreshStatus(STATUS_DRAGGING_REACH);
+                    else
+                        setRefreshStatus(STATUS_DRAGGING);
                 } else {
                     if (scrollTop > 0)
                         scrollTop = 0;
+                    if (-scrollTop > draggedRefreshView.triggerDistance())
+                        setRefreshStatus(STATUS_DRAGGING_REACH);
+                    else
+                        setRefreshStatus(STATUS_DRAGGING);
                 }
                 setDragViewOffsetAndPro((int) scrollTop, false);
                 break;
@@ -234,16 +242,16 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (draggedRefreshView == headRefreshView) {
                     if (overScrollTop > triggerDistance) {
                         setRefreshStatus(STATUS_REFRESHING);//刷新
-                        scrollAnimation(currentOffset, triggerDistance);
+                        scrollAnimation(currentOffset, triggerDistance, false);
                     } else {//距离不够取消刷新
-                        scrollAnimation(currentOffset, 0);
+                        scrollAnimation(currentOffset, 0, true);
                     }
                 } else {
                     if (-overScrollTop > triggerDistance) {
                         setRefreshStatus(STATUS_REFRESHING);//刷新
-                        scrollAnimation(currentOffset, -triggerDistance);
+                        scrollAnimation(currentOffset, -triggerDistance, false);
                     } else {//距离不够取消刷新
-                        scrollAnimation(currentOffset, 0);
+                        scrollAnimation(currentOffset, 0, true);
                     }
                 }
 
@@ -255,65 +263,10 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         return true;
     }
 
-    private void scrollAnimation(float start, float end) {
-        ValueAnimator mScrollAnimator = new ValueAnimator();
-        mScrollAnimator.setFloatValues(start, end);    // position = selectedIndex, positionOffset = 0.0f
-        mScrollAnimator.setInterpolator(decelerateInterpolator);
-        mScrollAnimator.setDuration(animaDuration);
-        mScrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float f = (float) animation.getAnimatedValue();
-                setDragViewOffsetAndPro((int) f, false);
-            }
-        });
-        mScrollAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        mScrollAnimator.start();
-    }
-
-
-    private boolean isRefreshing() {
-        return refreshStatus == STATUS_REFRESHING;
-    }
-
-    private boolean isBeingDragged() {
-        return refreshStatus == STATUS_DRAGGING | refreshStatus == STATUS_DRAGGING_REACH;
-    }
-
-    private boolean isNormal() {
-        return refreshStatus == STATUS_NORMAL;
-    }
-
-
-    protected void setRefreshStatus(int i) {
-        refreshStatus = i;
-        switch (i) {
-
-        }
-    }
-
-
+    //实现view移动变化的方法
     private void setDragViewOffsetAndPro(int offset, boolean requiresUpdate) {
+        if (offset == currentOffset)
+            return;
         int temp1 = draggedRefreshView.getOffsetFormat(currentOffset);
         int temp2 = draggedRefreshView.getOffsetFormat(offset);
         currentOffset = offset;
@@ -331,12 +284,72 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     }
 
 
+    protected void scrollAnimation(float start, float end, final boolean isCancer) {
+        ValueAnimator mScrollAnimator = new ValueAnimator();
+        mScrollAnimator.setFloatValues(start, end);
+        mScrollAnimator.setInterpolator(decelerateInterpolator);
+        mScrollAnimator.setDuration(animaDuration);
+        mScrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float f = (float) animation.getAnimatedValue();
+                setDragViewOffsetAndPro((int) f, false);
+            }
+        });
+        mScrollAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (isCancer)
+                    setRefreshStatus(STATUS_NORMAL);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        mScrollAnimator.start();
+    }
+
+
+    public boolean isBeingDragged() {
+        return refreshStatus == STATUS_DRAGGING | refreshStatus == STATUS_DRAGGING_REACH;
+    }
+
+    public boolean isNormal() {
+        return refreshStatus == STATUS_NORMAL;
+    }
+
+
+    protected void setRefreshStatus(int status) {
+        if (refreshStatus == status)
+            return;
+        refreshStatus = status;
+        if (draggedRefreshView != null)
+            draggedRefreshView.updateStatus(status);
+        changeStatus(refreshStatus);
+    }
+
+    //扩展用 目前集成在一个类也可以
+    //滑动view
     protected abstract View ensureTarget();
 
+    //判断是否滑动到顶部
     protected abstract boolean canChildScrollUp();
 
+    //判断是否滑动到底部
     protected abstract boolean canChildScrollDown();
 
+    protected abstract void changeStatus(int status);
 
     @Override
     public void requestDisallowInterceptTouchEvent(boolean b) {

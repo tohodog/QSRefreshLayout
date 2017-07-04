@@ -24,7 +24,7 @@ public class Bview  extends FrameLayout implements IRefreshView {
 
     @Override
     public boolean isMoveTarget() {
-        return false;
+        return true;
     }
 
     @Override
