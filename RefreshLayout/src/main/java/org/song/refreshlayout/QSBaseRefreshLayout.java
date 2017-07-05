@@ -160,7 +160,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (!isHead)
                     yDiff = -yDiff;
                 if (yDiff > touchSlop && Math.abs(yDiff) > Math.abs(xDiff)) {
-                    mInitialMotionY=y;//触发拖曳 刷新下Y值
+                    mInitialMotionY = y;//触发拖曳 刷新下Y值
                     mIsBeingDragged = true;
                 }
                 break;

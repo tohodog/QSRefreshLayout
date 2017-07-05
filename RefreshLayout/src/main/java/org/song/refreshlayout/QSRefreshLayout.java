@@ -95,7 +95,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
                 final AbsListView absListView = (AbsListView) mTarget;
                 return absListView.getChildCount() > 0
                         && (absListView.getLastVisiblePosition() < absListView.getCount() - 1 ||
-                        absListView.getChildAt(absListView.getChildCount() - 1).getBottom() <
+                        absListView.getChildAt(absListView.getChildCount() - 1).getBottom() >
                                 absListView.getHeight() - absListView.getPaddingBottom());
             } else {
                 return ViewCompat.canScrollVertically(mTarget, 1);
