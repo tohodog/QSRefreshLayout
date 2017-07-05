@@ -23,24 +23,27 @@ public class Floatview extends FrameLayout implements IRefreshView {
     }
 
     @Override
-    public boolean isMoveTarget() {
-        return false;
-    }
-
-    @Override
     public void updateStatus(int status) {
         if (status == 2)
             setBackgroundColor(Color.YELLOW);
         else if (status == 3)
             setBackgroundColor(Color.BLUE);
         else setBackgroundColor(Color.CYAN);
-
-
     }
 
     @Override
     public void updateProgress(float progress) {
 
+    }
+
+    @Override
+    public boolean isBringToFront() {
+        return true;
+    }
+
+    @Override
+    public float dragRate() {
+        return 1;
     }
 
     @Override
@@ -54,7 +57,12 @@ public class Floatview extends FrameLayout implements IRefreshView {
     }
 
     @Override
-    public int getOffsetFormat(int offset) {
-        return (int) (offset / 0.7f);
+    public int getThisViewOffset(int offset) {
+        return offset;
+    }
+
+    @Override
+    public int getTargetOffset(int offset) {
+        return 0;
     }
 }

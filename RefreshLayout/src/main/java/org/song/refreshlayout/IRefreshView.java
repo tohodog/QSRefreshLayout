@@ -11,16 +11,20 @@ public interface IRefreshView {
 
     View getView();
 
-    boolean isMoveTarget();//是否listview要移动 不需要移动会把view放在顶层 需要则放在底层
-
     void updateStatus(int status);//更新刷新状态
 
     void updateProgress(float progress);//刷新进度0~1
+
+    boolean isBringToFront();//是否view放在顶层
+
+    float dragRate();//滑动速度控制
 
     int triggerDistance();//触发刷新的距离
 
     int maxDistance();//最大滑动距离
 
-    int getOffsetFormat(int offset);//根据进度获取位移,可以拿来实现视差移动
+    int getThisViewOffset(int offset);//确定该view位移可以拿来实现视差移动
+
+    int getTargetOffset(int offset);//确定滚动view的位移,可以拿来实现视差移动
 
 }

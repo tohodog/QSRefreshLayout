@@ -28,17 +28,16 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     private void initData() {
         setHeadRefreshView(new Floatview(getContext()));
         setFootRefreshView(new Bview(getContext()));
+
+        requestLayout();
     }
 
     public void setHeadRefreshView(IRefreshView headRefreshView) {
         if (headRefreshView == null)
             return;
         this.headRefreshView = headRefreshView;
-        if (headRefreshView.isMoveTarget())
-            addView(headRefreshView.getView(), 0);
-        else
-            addView(headRefreshView.getView());
-
+        headRefreshView.getView().setVisibility(INVISIBLE);
+        addView(headRefreshView.getView());
         setOpenHeadRefresh(true);
     }
 
@@ -47,13 +46,11 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     }
 
     public void setFootRefreshView(IRefreshView footRefreshView) {
-        if (headRefreshView == null)
+        if (footRefreshView == null)
             return;
         this.footRefreshView = footRefreshView;
-        if (footRefreshView.isMoveTarget())
-            addView(footRefreshView.getView(), 0);
-        else
-            addView(footRefreshView.getView());
+        footRefreshView.getView().setVisibility(INVISIBLE);
+        addView(footRefreshView.getView());
         setOpenFootRefresh(true);
     }
 

@@ -3,6 +3,7 @@ package org.song.refreshlayout;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.v4.content.Loader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -28,8 +29,6 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     protected int animaDuration = 300;
 
     protected int refreshStatus;
-
-    protected float dragRate = 0.7f;//拖动速度
 
     protected View mTarget;//滑动的view
     protected IRefreshView headRefreshView, footRefreshView;//刷新的view
@@ -85,16 +84,16 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         int bottom = getPaddingBottom();
 
         //滑动控件强制match 无视它的属性
-        if (draggedRefreshView != null && draggedRefreshView.isMoveTarget())
-            mTarget.layout(left, top + currentOffset, left + width - right, top + height - bottom + currentOffset);
-        else
-            mTarget.layout(left, top, left + width - right, top + height - bottom);
+        int offset = 0;
+        if (draggedRefreshView != null)
+            offset = draggedRefreshView.getTargetOffset(currentOffset);
+        mTarget.layout(left, top + offset, left + width - right, top + height - bottom + offset);
 
         if (headRefreshView != null) {
             View child = headRefreshView.getView();
             final int w = child.getMeasuredWidth();
             final int h = child.getMeasuredHeight();
-            int offset = headRefreshView.getOffsetFormat(currentOffset);
+            offset = headRefreshView.getThisViewOffset(currentOffset);
             child.layout((width - w) / 2, -h + offset + top, (width - w) / 2 + w, offset + top);
         }
 
@@ -102,9 +101,10 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             View child = footRefreshView.getView();
             final int w = child.getMeasuredWidth();
             final int h = child.getMeasuredHeight();
-            int offset = footRefreshView.getOffsetFormat(currentOffset);
+            offset = footRefreshView.getThisViewOffset(currentOffset);
             child.layout((width - w) / 2, top + height + offset, (width - w) / 2 + w, top + height + h + offset);
         }
+
     }
 
 
@@ -160,6 +160,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (!isHead)
                     yDiff = -yDiff;
                 if (yDiff > touchSlop && Math.abs(yDiff) > Math.abs(xDiff)) {
+                    mInitialMotionY=y;//触发拖曳 刷新下Y值
                     mIsBeingDragged = true;
                 }
                 break;
@@ -196,7 +197,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 }
                 final float y = ev.getY(pointerIndex);
                 final float yDiff = y - mInitialMotionY;
-                float scrollTop = yDiff * dragRate;
+                float scrollTop = yDiff * draggedRefreshView.dragRate();
                 //防止拖回去
                 if (draggedRefreshView == headRefreshView) {
                     if (scrollTop < 0)
@@ -205,15 +206,11 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     if (scrollTop > 0)
                         scrollTop = 0;
                 }
-                //scrollview滚动的距离按照
-                int tempScrollTop = (int) scrollTop;
-                if (!draggedRefreshView.isMoveTarget())
-                    tempScrollTop = draggedRefreshView.getOffsetFormat(tempScrollTop);
-                if (Math.abs(tempScrollTop) > draggedRefreshView.triggerDistance())
+                if (Math.abs(scrollTop) > draggedRefreshView.triggerDistance())
                     setRefreshStatus(STATUS_DRAGGING_REACH);
                 else
                     setRefreshStatus(STATUS_DRAGGING);
-                setDragViewOffsetAndPro((int) scrollTop, false);
+                setDragViewOffsetAndPro((int) scrollTop, true);
                 break;
             }
 
@@ -256,29 +253,32 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     private void setDragViewOffsetAndPro(int offset, boolean requiresUpdate) {
         if (offset == currentOffset)
             return;
-
         int max = draggedRefreshView.maxDistance();
         if (Math.abs(offset) > max)
             offset = offset > 0 ? max : -max;
         int temp = currentOffset;
         currentOffset = offset;
 
-        if (draggedRefreshView.isMoveTarget()) {//
-            mTarget.offsetTopAndBottom(offset - temp);
-            int temp1 = draggedRefreshView.getOffsetFormat(temp);
-            int temp2 = draggedRefreshView.getOffsetFormat(offset);
-            draggedRefreshView.getView().offsetTopAndBottom(temp2 - temp1);
-        } else {
+
+        if (draggedRefreshView.isBringToFront())
             draggedRefreshView.getView().bringToFront();
-            draggedRefreshView.getView().offsetTopAndBottom(offset - temp);
-        }
+
+        int temp1, temp2;
+
+        temp1 = draggedRefreshView.getTargetOffset(temp);
+        temp2 = draggedRefreshView.getTargetOffset(offset);
+        mTarget.offsetTopAndBottom(temp2 - temp1);
+
+        temp1 = draggedRefreshView.getThisViewOffset(temp);
+        temp2 = draggedRefreshView.getThisViewOffset(offset);
+        draggedRefreshView.getView().offsetTopAndBottom(temp2 - temp1);
 
         float pro = 1f * offset / draggedRefreshView.triggerDistance();
         if (pro < 0) pro = 0;
         if (pro > 1) pro = 1;
         draggedRefreshView.updateProgress(pro);
 
-        if (requiresUpdate && android.os.Build.VERSION.SDK_INT < 11) {
+        if (requiresUpdate) {
             invalidate();
         }
     }
@@ -293,7 +293,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float f = (float) animation.getAnimatedValue();
-                setDragViewOffsetAndPro((int) f, false);
+                setDragViewOffsetAndPro((int) f, true);
             }
         });
         mScrollAnimator.addListener(new Animator.AnimatorListener() {
@@ -334,8 +334,10 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         if (refreshStatus == status)
             return;
         refreshStatus = status;
-        if (draggedRefreshView != null)
+        if (draggedRefreshView != null) {
             draggedRefreshView.updateStatus(status);
+            draggedRefreshView.getView().setVisibility(status == STATUS_NORMAL ? INVISIBLE : VISIBLE);
+        }
         changeStatus(refreshStatus);
     }
 
