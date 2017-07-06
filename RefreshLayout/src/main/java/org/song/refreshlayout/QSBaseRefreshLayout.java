@@ -26,7 +26,9 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     public static final int STATUS_DRAGGING = 1;
     public static final int STATUS_DRAGGING_REACH = 2;
     public static final int STATUS_REFRESHING = 3;
-    protected int animaDuration = 300;
+    public static final int STATUS_REFRESHED = 4;
+
+    protected int animaDuration = 365;
 
     protected int refreshStatus;
 
@@ -206,7 +208,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     if (scrollTop > 0)
                         scrollTop = 0;
                 }
-                if (Math.abs(scrollTop) > draggedRefreshView.triggerDistance())
+                if (Math.abs(scrollTop) >= draggedRefreshView.triggerDistance())
                     setRefreshStatus(STATUS_DRAGGING_REACH);
                 else
                     setRefreshStatus(STATUS_DRAGGING);
@@ -237,9 +239,9 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     triggerDistance = -triggerDistance;
                 if (refreshStatus == STATUS_DRAGGING_REACH) {
                     setRefreshStatus(STATUS_REFRESHING);//刷新
-                    scrollAnimation(currentOffset, triggerDistance, false);
+                    scrollAnimation(currentOffset, triggerDistance, false, false);
                 } else if (refreshStatus == STATUS_DRAGGING) {//距离不够取消刷新
-                    scrollAnimation(currentOffset, 0, true);
+                    scrollAnimation(currentOffset, 0, true, false);
                 }
                 mActivePointerId = INVALID_POINTER;
                 return false;
@@ -283,17 +285,48 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         }
     }
 
+    //刷新完成
+    public void refreshComplete() {
+        setRefreshStatus(STATUS_REFRESHED);
+        scrollAnimation(currentOffset, 0, true, false);
+    }
 
-    protected void scrollAnimation(float start, float end, final boolean isCancer) {
+    //自动进入刷新状态[isAnime是否显示动画过程
+    public void enterHeadRefreshing(boolean isAnime) {
+        draggedRefreshView = headRefreshView;
+        enterRefreshing(isAnime);
+    }
+
+    //自动进入刷新状态[isAnime是否显示动画过程
+    public void enterFootRefreshing(boolean isAnime) {
+        draggedRefreshView = footRefreshView;
+        enterRefreshing(isAnime);
+    }
+
+    private void enterRefreshing(final boolean isAnime) {
+        if (draggedRefreshView == null)
+            return;
+        if (isAnime) {
+            setRefreshStatus(STATUS_DRAGGING);
+            scrollAnimation(0, draggedRefreshView.triggerDistance(), false, true);
+        } else {
+            setRefreshStatus(STATUS_DRAGGING);
+            setDragViewOffsetAndPro(draggedRefreshView.triggerDistance(), true);
+            setRefreshStatus(STATUS_DRAGGING_REACH);
+            setRefreshStatus(STATUS_REFRESHING);
+        }
+    }
+
+    //插值动画 模拟拖曳
+    protected void scrollAnimation(int start, int end, final boolean isCancer, final boolean isRefresh) {
         ValueAnimator mScrollAnimator = new ValueAnimator();
-        mScrollAnimator.setFloatValues(start, end);
+        mScrollAnimator.setIntValues(start, end);
         mScrollAnimator.setInterpolator(decelerateInterpolator);
         mScrollAnimator.setDuration(animaDuration);
         mScrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                float f = (float) animation.getAnimatedValue();
-                setDragViewOffsetAndPro((int) f, true);
+                setDragViewOffsetAndPro((int) animation.getAnimatedValue(), true);
             }
         });
         mScrollAnimator.addListener(new Animator.AnimatorListener() {
@@ -305,6 +338,10 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             public void onAnimationEnd(Animator animation) {
                 if (isCancer)
                     setRefreshStatus(STATUS_NORMAL);
+                if (isRefresh) {
+                    setRefreshStatus(STATUS_DRAGGING_REACH);
+                    setRefreshStatus(STATUS_REFRESHING);
+                }
             }
 
             @Override
@@ -330,7 +367,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     }
 
 
-    protected void setRefreshStatus(int status) {
+    private void setRefreshStatus(int status) {
         if (refreshStatus == status)
             return;
         refreshStatus = status;

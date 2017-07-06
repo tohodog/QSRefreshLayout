@@ -1,27 +1,28 @@
-package org.song.refreshlayout;
+package org.song.refreshlayout.refreshview;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import org.song.refreshlayout.IRefreshView;
+
 /**
  * Created by song on 2017/7/3.
  */
 
-public class Bview extends FrameLayout implements IRefreshView {
+public class TestTopView extends FrameLayout implements IRefreshView {
 
-    public Bview(Context context) {
+    public TestTopView(Context context) {
         super(context);
         setLayoutParams(new LayoutParams(100, 100));
-        setBackgroundColor(Color.YELLOW);
+        setBackgroundColor(Color.CYAN);
     }
 
     @Override
     public View getView() {
         return this;
     }
-
 
     @Override
     public void updateStatus(int status) {
@@ -39,17 +40,12 @@ public class Bview extends FrameLayout implements IRefreshView {
 
     @Override
     public boolean isBringToFront() {
-        return false;
+        return true;
     }
 
     @Override
     public float dragRate() {
-        return 0.7f;
-    }
-
-    @Override
-    public int triggerDistance() {
-        return getLayoutParams().height;
+        return 1;
     }
 
     @Override
@@ -58,21 +54,17 @@ public class Bview extends FrameLayout implements IRefreshView {
     }
 
     @Override
-    public int getThisViewOffset(int offset) {
-        boolean b = offset > 0;
-        offset = Math.abs(offset);
-        int t = triggerDistance();
-        int i;
-        if (offset > t)
-            i = offset;
-        else
-            i = t / 2 + offset / 2;
-        return b ? i : -i;
+    public int triggerDistance() {
+        return getLayoutParams().height;
+    }
 
+    @Override
+    public int getThisViewOffset(int offset) {
+        return offset;
     }
 
     @Override
     public int getTargetOffset(int offset) {
-        return offset;
+        return 0;
     }
 }

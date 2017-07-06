@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
 
+import org.song.refreshlayout.refreshview.TestBottomView;
+import org.song.refreshlayout.refreshview.TestTopView;
+
 /**
  * Created by song on 2017/7/3.
  */
@@ -26,8 +29,8 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     }
 
     private void initData() {
-        setHeadRefreshView(new Floatview(getContext()));
-        setFootRefreshView(new Bview(getContext()));
+        setHeadRefreshView(new TestTopView(getContext()));
+        setFootRefreshView(new TestBottomView(getContext()));
 
         requestLayout();
     }
@@ -37,7 +40,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
             return;
         this.headRefreshView = headRefreshView;
         headRefreshView.getView().setVisibility(INVISIBLE);
-        addView(headRefreshView.getView());
+        addView(headRefreshView.getView(),0);
         setOpenHeadRefresh(true);
     }
 
@@ -50,7 +53,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
             return;
         this.footRefreshView = footRefreshView;
         footRefreshView.getView().setVisibility(INVISIBLE);
-        addView(footRefreshView.getView());
+        addView(footRefreshView.getView(),0);
         setOpenFootRefresh(true);
     }
 
@@ -105,9 +108,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         }
     }
 
-    public void refreshComplete() {
-        scrollAnimation(currentOffset, 0, true);
-    }
+
 
     public boolean isRefreshing() {
         return refreshStatus == STATUS_REFRESHING;
