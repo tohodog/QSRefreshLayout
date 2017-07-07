@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AbsListView;
 
 import org.song.refreshlayout.refreshview.BarRefreshView;
+import org.song.refreshlayout.refreshview.PlainRefreshView;
 import org.song.refreshlayout.refreshview.TestTopView;
 
 /**
@@ -29,7 +30,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     }
 
     private void initData() {
-        setHeadRefreshView(new TestTopView(getContext()));
+        setHeadRefreshView(new PlainRefreshView(getContext()));
         setFootRefreshView(new BarRefreshView(getContext()));
     }
 

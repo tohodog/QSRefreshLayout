@@ -75,8 +75,10 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-
-        return getTargetOffset(offset);
+        if (offset > 0)
+            return mTotalDragDistance;
+        else
+            return getTargetOffset(offset);
     }
 
     @Override
