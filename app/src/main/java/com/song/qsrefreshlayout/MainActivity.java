@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import org.song.refreshlayout.QSRefreshLayout;
+import org.song.refreshlayout.refreshview.BarRefreshView;
+import org.song.refreshlayout.refreshview.PlainRefreshView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,24 +43,24 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             qsRefreshLayout.refreshComplete();
                         }
-                    }, 2000);
+                    }, 3000);
                 }
             }
         });
 
-        List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> listems = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            Map<String, Object> listem = new HashMap<String, Object>();
-            listem.put("name", "=======" + i);
+            Map<String, Object> listem = new HashMap<>();
+            listem.put("name", "半透明scroll=" + i);
             listems.add(listem);
         }
         listView.setAdapter(new SimpleAdapter(this, listems, android.R.layout.simple_list_item_1, new String[]{"name"},
                 new int[]{android.R.id.text1}) {
             public View getView(int position, View convertView, ViewGroup parent) {
-                Log.e("===",""+position);
                 return super.getView(position, convertView, parent);
             }
         });
+        qsRefreshLayout.enterHeadRefreshing(true);
 
     }
 }
