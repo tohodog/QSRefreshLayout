@@ -77,4 +77,8 @@ public class TestBottomView extends FrameLayout implements IRefreshView {
     public int getTargetOffset(int offset) {
         return offset;
     }
+    @Override
+    public int completeAnimaDuration() {
+        return 0;
+    }
 }

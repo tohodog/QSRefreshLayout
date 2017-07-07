@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
 
-import org.song.refreshlayout.refreshview.TestBottomView;
+import org.song.refreshlayout.refreshview.BarRefreshView;
 import org.song.refreshlayout.refreshview.TestTopView;
 
 /**
@@ -30,9 +30,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
 
     private void initData() {
         setHeadRefreshView(new TestTopView(getContext()));
-        setFootRefreshView(new TestBottomView(getContext()));
-
-        requestLayout();
+        setFootRefreshView(new BarRefreshView(getContext()));
     }
 
     public void setHeadRefreshView(IRefreshView headRefreshView) {
@@ -40,7 +38,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
             return;
         this.headRefreshView = headRefreshView;
         headRefreshView.getView().setVisibility(INVISIBLE);
-        addView(headRefreshView.getView(),0);
+        addView(headRefreshView.getView(), 0);
         setOpenHeadRefresh(true);
     }
 
@@ -53,12 +51,21 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
             return;
         this.footRefreshView = footRefreshView;
         footRefreshView.getView().setVisibility(INVISIBLE);
-        addView(footRefreshView.getView(),0);
+        addView(footRefreshView.getView(), 0);
         setOpenFootRefresh(true);
     }
 
     public void setOpenFootRefresh(boolean openFootRefresh) {
         isOpenFootRefresh = openFootRefresh;
+    }
+
+    public IRefreshView getHeadRefreshView() {
+        return headRefreshView;
+    }
+
+
+    public IRefreshView getFootRefreshView() {
+        return footRefreshView;
     }
 
     @Override
@@ -107,7 +114,6 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
             return ViewCompat.canScrollVertically(mTarget, 1);
         }
     }
-
 
 
     public boolean isRefreshing() {

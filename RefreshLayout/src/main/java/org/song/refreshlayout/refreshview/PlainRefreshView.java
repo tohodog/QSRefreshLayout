@@ -1,11 +1,8 @@
 package org.song.refreshlayout.refreshview;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 
 import org.song.refreshlayout.IRefreshView;
@@ -48,13 +45,12 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
             plainRefreshDraw.stop();
         }
 
-
     }
 
     @Override
     public void updateProgress(float progress) {
         plainRefreshDraw.setPercent(progress);
-
+        invalidate();
     }
 
     @Override
@@ -79,16 +75,22 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-        invalidate();
-        return mTotalDragDistance;
+
+        return getTargetOffset(offset);
     }
 
     @Override
     public int getTargetOffset(int offset) {
-        if (offset >= triggerDistance())
-            offset = triggerDistance() + (offset - triggerDistance()) / 10;
-        if (offset > mTotalDragDistance)
-            offset = mTotalDragDistance;
-        return offset;
+        int abs = Math.abs(offset);
+        if (abs >= triggerDistance())
+            abs = triggerDistance() + (abs - triggerDistance()) / 10;
+        if (abs > mTotalDragDistance)
+            abs = mTotalDragDistance;
+        return offset > 0 ? abs : -abs;
+    }
+
+    @Override
+    public int completeAnimaDuration() {
+        return 0;
     }
 }

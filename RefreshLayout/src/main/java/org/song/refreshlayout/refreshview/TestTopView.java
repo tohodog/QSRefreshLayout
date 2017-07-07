@@ -67,4 +67,9 @@ public class TestTopView extends FrameLayout implements IRefreshView {
     public int getTargetOffset(int offset) {
         return 0;
     }
+
+    @Override
+    public int completeAnimaDuration() {
+        return 0;
+    }
 }

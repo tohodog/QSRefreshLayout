@@ -19,12 +19,14 @@ public interface IRefreshView {
 
     float dragRate();//滑动速度控制
 
-    int triggerDistance();//触发刷新的距离
+    int triggerDistance();//触发刷新的距离 [实际触摸距离*dragRate()>triggerDistance() 触发刷新
 
     int maxDistance();//最大滑动距离
 
     int getThisViewOffset(int offset);//确定该view位移可以拿来实现视差移动
 
     int getTargetOffset(int offset);//确定滚动view的位移,可以拿来实现视差移动
+
+    int completeAnimaDuration();//完成刷新后到消失 的动画时间
 
 }
