@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //qsRefreshLayout.setHeadRefreshView(new PlainRefreshView(this));
         List<Map<String, Object>> listems = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Map<String, Object> listem = new HashMap<>();
@@ -60,7 +60,12 @@ public class MainActivity extends AppCompatActivity {
                 return super.getView(position, convertView, parent);
             }
         });
-        qsRefreshLayout.enterHeadRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                qsRefreshLayout.enterHeadRefreshing(true);
+            }
+        },555);
 
     }
 }

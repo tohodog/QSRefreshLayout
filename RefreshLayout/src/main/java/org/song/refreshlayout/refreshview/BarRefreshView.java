@@ -30,8 +30,8 @@ public class BarRefreshView extends View implements IRefreshView {
         setLayoutParams(new ViewGroup.LayoutParams(-1, height));
     }
 
-    public void setColorScheme(int color1, int color2, int color3, int color4) {
-        swipeProgressBar.setColorScheme(color1, color2, color3, color4);
+    public void setColorScheme(int... color1) {
+        swipeProgressBar.setColorScheme(color1);
     }
 
     @Override//确定view大小

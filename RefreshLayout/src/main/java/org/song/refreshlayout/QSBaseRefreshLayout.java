@@ -206,6 +206,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     if (scrollTop > 0)
                         scrollTop = 0;
                 }
+                //先设置好值才改变状态
                 setDragViewOffsetAndPro((int) scrollTop, true);
                 if (Math.abs(scrollTop) >= draggedRefreshView.triggerDistance())
                     setRefreshStatus(STATUS_DRAGGING_REACH);
@@ -237,9 +238,9 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                     triggerDistance = -triggerDistance;
                 if (refreshStatus == STATUS_DRAGGING_REACH) {
                     setRefreshStatus(STATUS_REFRESHING);//刷新
-                    scrollAnimation(currentOffset, triggerDistance, animaDuration, false, false);
+                    scrollAnimation(currentOffset, triggerDistance, animaDuration);
                 } else if (refreshStatus == STATUS_DRAGGING) {//距离不够取消刷新
-                    scrollAnimation(currentOffset, 0, animaDuration, true, false);
+                    scrollAnimation(currentOffset, 0, animaDuration, STATUS_NORMAL);
                 }
                 mActivePointerId = MotionEvent.INVALID_POINTER_ID;
                 return false;
@@ -272,9 +273,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         temp2 = draggedRefreshView.getThisViewOffset(offset);
         draggedRefreshView.getView().offsetTopAndBottom(temp2 - temp1);
 
-        float pro = 1f * Math.abs(offset) / draggedRefreshView.triggerDistance();
-        if (pro < 0) pro = 0;
-        if (pro > 1) pro = 1;
+        float pro = Math.abs(1f * offset / draggedRefreshView.triggerDistance());
         draggedRefreshView.updateProgress(pro);
 
         if (requiresUpdate) {
@@ -286,7 +285,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     public void refreshComplete() {
         if (refreshStatus == STATUS_REFRESHING) {
             setRefreshStatus(STATUS_REFRESHED);
-            scrollAnimation(currentOffset, 0, draggedRefreshView.completeAnimaDuration(), true, false);
+            scrollAnimation(currentOffset, 0, draggedRefreshView.completeAnimaDuration(), STATUS_NORMAL);
         }
     }
 
@@ -310,7 +309,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             public void run() {
                 if (isAnime) {
                     setRefreshStatus(STATUS_DRAGGING);
-                    scrollAnimation(0, draggedRefreshView.triggerDistance(), animaDuration, false, true);
+                    scrollAnimation(0, draggedRefreshView.triggerDistance(), animaDuration, STATUS_DRAGGING_REACH, STATUS_REFRESHING);
                 } else {
                     setRefreshStatus(STATUS_DRAGGING);
                     setDragViewOffsetAndPro(draggedRefreshView.triggerDistance(), true);
@@ -322,7 +321,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     }
 
     //插值动画 模拟拖曳
-    protected void scrollAnimation(int start, int end, int time, final boolean isCancer, final boolean isRefresh) {
+    protected void scrollAnimation(int start, int end, int time, final int... status) {
         ValueAnimator mScrollAnimator = new ValueAnimator();
         mScrollAnimator.setIntValues(start, end);
         mScrollAnimator.setInterpolator(decelerateInterpolator);
@@ -340,12 +339,9 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (isCancer)
-                    setRefreshStatus(STATUS_NORMAL);
-                if (isRefresh) {
-                    setRefreshStatus(STATUS_DRAGGING_REACH);
-                    setRefreshStatus(STATUS_REFRESHING);
-                }
+                if (status != null)
+                    for (int s : status)
+                        setRefreshStatus(s);
             }
 
             @Override
@@ -379,6 +375,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
             draggedRefreshView.updateStatus(status);
             draggedRefreshView.getView().setVisibility(status == STATUS_NORMAL ? INVISIBLE : VISIBLE);
         }
+        //必须放最后
         changeStatus(refreshStatus);
     }
 

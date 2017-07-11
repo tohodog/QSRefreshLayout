@@ -21,9 +21,7 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
         super(context);
         float density = context.getResources().getDisplayMetrics().density;
         mTotalDragDistance = Math.round((float) 120 * density);
-
         setLayoutParams(new ViewGroup.LayoutParams(-1, mTotalDragDistance));
-
 
         plainRefreshDraw = new PlainRefreshDraw(context, mTotalDragDistance);
         setImageDrawable(plainRefreshDraw);
@@ -49,6 +47,8 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
 
     @Override
     public void updateProgress(float progress) {
+        if (progress > 1)
+            progress = 1;
         plainRefreshDraw.setPercent(progress);
         invalidate();
     }
@@ -76,9 +76,11 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
     @Override
     public int getThisViewOffset(int offset) {
         if (offset > 0)
-            return mTotalDragDistance;
+            offset = mTotalDragDistance;
         else
-            return getTargetOffset(offset);
+            offset = getTargetOffset(offset);
+        //plainRefreshDraw.offsetTopAndBottom(offset);
+        return offset;
     }
 
     @Override

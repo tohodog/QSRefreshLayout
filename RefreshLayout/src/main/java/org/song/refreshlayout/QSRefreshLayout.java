@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.AbsListView;
 
 import org.song.refreshlayout.refreshview.BarRefreshView;
-import org.song.refreshlayout.refreshview.PlainRefreshView;
-import org.song.refreshlayout.refreshview.TestTopView;
+import org.song.refreshlayout.refreshview.CircleImageView;
 
 /**
  * Created by song on 2017/7/3.
@@ -30,13 +29,15 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     }
 
     private void initData() {
-        setHeadRefreshView(new PlainRefreshView(getContext()));
+        setHeadRefreshView(new CircleImageView(getContext()));
         setFootRefreshView(new BarRefreshView(getContext()));
     }
 
     public void setHeadRefreshView(IRefreshView headRefreshView) {
         if (headRefreshView == null)
             return;
+        if (this.headRefreshView != null)
+            removeView(this.headRefreshView.getView());
         this.headRefreshView = headRefreshView;
         headRefreshView.getView().setVisibility(INVISIBLE);
         addView(headRefreshView.getView(), 0);
@@ -50,6 +51,8 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     public void setFootRefreshView(IRefreshView footRefreshView) {
         if (footRefreshView == null)
             return;
+        if (this.footRefreshView != null)
+            removeView(this.footRefreshView.getView());
         this.footRefreshView = footRefreshView;
         footRefreshView.getView().setVisibility(INVISIBLE);
         addView(footRefreshView.getView(), 0);
@@ -60,13 +63,12 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         isOpenFootRefresh = openFootRefresh;
     }
 
-    public IRefreshView getHeadRefreshView() {
-        return headRefreshView;
+    public View getHeadRefreshView() {
+        return headRefreshView.getView();
     }
 
-
-    public IRefreshView getFootRefreshView() {
-        return footRefreshView;
+    public View getFootRefreshView() {
+        return footRefreshView.getView();
     }
 
     @Override
