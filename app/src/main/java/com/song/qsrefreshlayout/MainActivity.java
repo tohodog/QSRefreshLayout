@@ -12,6 +12,7 @@ import android.widget.SimpleAdapter;
 import org.song.refreshlayout.QSRefreshLayout;
 import org.song.refreshlayout.refreshview.BarRefreshView;
 import org.song.refreshlayout.refreshview.PlainRefreshView;
+import org.song.refreshlayout.refreshview.XMLRefreshView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        //qsRefreshLayout.setHeadRefreshView(new PlainRefreshView(this));
+        qsRefreshLayout.setHeadRefreshView(new XMLRefreshView(this));
         List<Map<String, Object>> listems = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Map<String, Object> listem = new HashMap<>();
