@@ -27,10 +27,10 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
     private ProgressBar refreshPB;
 
 
-    private String dragging = "下拉",
-            dragging_reach = "松开",
-            refreshing = "加载中",
-            refreshed = "完成";
+    private String dragging = "下拉刷新",
+            dragging_reach = "松开刷新",
+            refreshing = "加载中...",
+            refreshed = "刷新完成";
 
     public XMLRefreshView(Context context) {
         super(context);
@@ -68,7 +68,7 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
 
         } else if (status == QSRefreshLayout.STATUS_REFRESHED) {
             refreshTV.setText(refreshed);
-            refreshIV.setVisibility(VISIBLE);
+            //refreshIV.setVisibility(VISIBLE);
 
         }
     }

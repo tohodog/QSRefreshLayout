@@ -1,5 +1,6 @@
 package com.song.qsrefreshlayout;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
         listView = (ListView) findViewById(R.id.list);
         initDate();
+
+        startActivity(new Intent(this,RecyleActivity.class));
     }
 
     private void initDate() {

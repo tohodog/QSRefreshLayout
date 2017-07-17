@@ -374,6 +374,8 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         if (draggedRefreshView != null) {
             draggedRefreshView.updateStatus(status);
             draggedRefreshView.getView().setVisibility(status == STATUS_NORMAL ? INVISIBLE : VISIBLE);
+            if (status == STATUS_NORMAL)
+                draggedRefreshView = null;
         }
         //必须放最后
         changeStatus(refreshStatus);
