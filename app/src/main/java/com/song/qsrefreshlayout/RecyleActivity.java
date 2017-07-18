@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.song.qsrefreshlayout.refreshview.JDRefreshView;
+import com.song.qsrefreshlayout.refreshview.PlainRefreshView;
+
 import org.song.refreshlayout.QSRefreshLayout;
 
 public class RecyleActivity extends AppCompatActivity {
@@ -26,6 +29,7 @@ public class RecyleActivity extends AppCompatActivity {
     }
 
     private void initDate() {
+        qsRefreshLayout.setHeadRefreshView(new JDRefreshView(this));
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean b, int status) {

@@ -11,17 +11,18 @@
 
         <ImageView
             android:id="@+id/refresh_iv"
-            android:layout_width="30dp"
+            android:layout_width="26dp"
             android:layout_height="60dp"
-            android:src="@drawable/refresh_arrow_up"
-            android:layout_gravity="center" />
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:src="@drawable/refresh_arrow_down" />
 
-        <ProgressBar
+        <ImageView
             android:id="@+id/refresh_pb"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/loading" />
 
     </FrameLayout>
 
@@ -30,6 +31,7 @@
         android:id="@+id/refresh_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#888888"
         android:text="下拉" />
 
 </LinearLayout>

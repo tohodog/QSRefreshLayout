@@ -29,4 +29,6 @@ public interface IRefreshView {
 
     int completeAnimaDuration();//完成刷新后到消失 的动画时间, <=0使用默认时间
 
+    void isHeadView(boolean isHead);//是否顶部刷新view
+
 }

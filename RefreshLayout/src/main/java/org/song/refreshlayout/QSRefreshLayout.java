@@ -39,6 +39,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         if (this.headRefreshView != null)
             removeView(this.headRefreshView.getView());
         this.headRefreshView = headRefreshView;
+        headRefreshView.isHeadView(true);
         headRefreshView.getView().setVisibility(INVISIBLE);
         addView(headRefreshView.getView(), 0);
         setOpenHeadRefresh(true);
@@ -54,6 +55,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         if (this.footRefreshView != null)
             removeView(this.footRefreshView.getView());
         this.footRefreshView = footRefreshView;
+        footRefreshView.isHeadView(false);
         footRefreshView.getView().setVisibility(INVISIBLE);
         addView(footRefreshView.getView(), 0);
         setOpenFootRefresh(true);

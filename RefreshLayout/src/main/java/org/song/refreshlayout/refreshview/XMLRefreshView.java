@@ -1,6 +1,8 @@
 package org.song.refreshlayout.refreshview;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +26,10 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
     private ViewGroup refreshView;
     private TextView refreshTV;
     private ImageView refreshIV;
-    private ProgressBar refreshPB;
+    private ImageView refreshPB;
 
 
-    private String dragging = "下拉刷新",
+    private String dragging = "",
             dragging_reach = "松开刷新",
             refreshing = "加载中...",
             refreshed = "刷新完成";
@@ -37,7 +39,7 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
         refreshView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.refresh, this, false);
         refreshTV = (TextView) refreshView.findViewById(R.id.refresh_tv);
         refreshIV = (ImageView) refreshView.findViewById(R.id.refresh_iv);
-        refreshPB = (ProgressBar) refreshView.findViewById(R.id.refresh_pb);
+        refreshPB = (ImageView) refreshView.findViewById(R.id.refresh_pb);
         addView(refreshView);
     }
 
@@ -46,30 +48,31 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
         return this;
     }
 
+    private boolean flag;
+
     @Override
     public void updateStatus(int status) {
-        refreshIV.setVisibility(GONE);
+        refreshIV.setVisibility(VISIBLE);
         refreshPB.setVisibility(GONE);
 
         if (status == QSRefreshLayout.STATUS_DRAGGING) {
             refreshTV.setText(dragging);
-            refreshIV.setVisibility(VISIBLE);
-            rotate(refreshIV, 0, 180);
+            if (flag)
+                rotate(refreshIV, 180, 360);
+            flag = false;
         } else if (status == QSRefreshLayout.STATUS_DRAGGING_REACH) {
             refreshTV.setText(dragging_reach);
-            refreshIV.setVisibility(VISIBLE);
-            rotate(refreshIV, 180, 360);
-
-
+            rotate(refreshIV, 0, 180);
+            flag = true;
         } else if (status == QSRefreshLayout.STATUS_REFRESHING) {
+            refreshIV.clearAnimation();
+            refreshIV.setVisibility(GONE);
             refreshTV.setText(refreshing);
             refreshPB.setVisibility(VISIBLE);
-
-
+            ((AnimationDrawable) refreshPB.getDrawable()).start();
         } else if (status == QSRefreshLayout.STATUS_REFRESHED) {
             refreshTV.setText(refreshed);
-            //refreshIV.setVisibility(VISIBLE);
-
+            ((AnimationDrawable) refreshPB.getDrawable()).stop();
         }
     }
 
@@ -122,6 +125,20 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
     @Override
     public int completeAnimaDuration() {
         return 0;
+    }
+
+    //private boolean isHead;
+
+    @Override
+    public void isHeadView(boolean isHead) {
+        //this.isHead = isHead;
+        refreshIV.setImageResource(isHead ? R.drawable.refresh_arrow_down : R.drawable.refresh_arrow_up);
+        if (TextUtils.isEmpty(dragging))
+            dragging = isHead ? "下拉刷新" : "上拉刷新";
+    }
+
+    public void setBlackStyle(){
+
     }
 
 

@@ -51,6 +51,7 @@ public abstract class AnimeRefreshView extends ImageView implements IRefreshView
                 break;
             case QSRefreshLayout.STATUS_REFRESHED:
                 animationDrawable.stop();
+                setImageDrawable(null);
                 break;
             case QSRefreshLayout.STATUS_NORMAL:
                 break;
@@ -116,5 +117,10 @@ public abstract class AnimeRefreshView extends ImageView implements IRefreshView
     @Override
     public int completeAnimaDuration() {
         return 0;
+    }
+
+    @Override
+    public void isHeadView(boolean isHead) {
+
     }
 }

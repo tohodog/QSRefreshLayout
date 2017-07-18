@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    tools:context="com.song.qsrefreshlayout.RecyleActivity">
+
+
+    <RelativeLayout
+        android:layout_width="76dp"
+        android:layout_height="76dp">
+
+        <ImageView
+            android:id="@+id/jd_people"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/jd_refresh_people_0" />
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitStart"
+            android:id="@+id/jd_pack"
+            android:layout_width="30dp"
+            android:layout_height="16dp"
+            android:src="@drawable/jd_refresh_goods_0" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#646464"
+            android:textSize="16dp"
+
+            android:text="让购物更便捷" />
+
+        <TextView
+            android:id="@+id/jd_text"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:text="下拉刷新..." />
+    </LinearLayout>
+</LinearLayout>

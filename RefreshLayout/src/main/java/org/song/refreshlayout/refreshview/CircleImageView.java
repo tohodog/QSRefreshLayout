@@ -172,6 +172,11 @@ public class CircleImageView extends ImageView implements IRefreshView {
         return 0;
     }
 
+    @Override
+    public void isHeadView(boolean isHead) {
+
+    }
+
 
     private class OvalShadow extends OvalShape {
         private final RadialGradient mRadialGradient;

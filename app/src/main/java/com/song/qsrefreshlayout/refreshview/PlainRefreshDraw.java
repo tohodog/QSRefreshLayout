@@ -1,4 +1,4 @@
-package org.song.refreshlayout.refreshview;
+package com.song.qsrefreshlayout.refreshview;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -17,7 +17,8 @@ import android.support.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-import org.song.refreshlayout.R;
+
+import com.song.qsrefreshlayout.R;
 
 import java.util.HashMap;
 import java.util.Map;

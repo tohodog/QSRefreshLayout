@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import org.song.refreshlayout.QSRefreshLayout;
-import org.song.refreshlayout.refreshview.BarRefreshView;
-import org.song.refreshlayout.refreshview.PlainRefreshView;
 import org.song.refreshlayout.refreshview.XMLRefreshView;
 
 import java.util.ArrayList;
@@ -52,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         qsRefreshLayout.setHeadRefreshView(new XMLRefreshView(this));
+        qsRefreshLayout.setFootRefreshView(new XMLRefreshView(this));
+
         List<Map<String, Object>> listems = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Map<String, Object> listem = new HashMap<>();

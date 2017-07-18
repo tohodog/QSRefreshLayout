@@ -92,7 +92,7 @@ public class BarRefreshView extends View implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-        return offset > 0 ? height : -height;
+        return isHead ? height : -height;
     }
 
     @Override
@@ -103,5 +103,12 @@ public class BarRefreshView extends View implements IRefreshView {
     @Override
     public int completeAnimaDuration() {
         return SwipeProgressBar.FINISH_ANIMATION_DURATION_MS;
+    }
+
+    boolean isHead;
+
+    @Override
+    public void isHeadView(boolean isHead) {
+        this.isHead = isHead;
     }
 }

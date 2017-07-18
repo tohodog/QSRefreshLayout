@@ -1,4 +1,4 @@
-package org.song.refreshlayout.refreshview;
+package com.song.qsrefreshlayout.refreshview;
 
 import android.content.Context;
 import android.view.View;
@@ -95,6 +95,11 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
 
     @Override
     public int completeAnimaDuration() {
-        return 0;
+        return 500;
+    }
+
+    @Override
+    public void isHeadView(boolean isHead) {
+
     }
 }
