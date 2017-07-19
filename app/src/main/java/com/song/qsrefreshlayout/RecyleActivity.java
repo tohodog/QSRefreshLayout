@@ -1,12 +1,11 @@
 package com.song.qsrefreshlayout;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.song.qsrefreshlayout.refreshview.ElemeRefreshView;
@@ -28,6 +27,8 @@ public class RecyleActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     List<IRefreshView> lists = new ArrayList<>();
+    List<IRefreshView> listsF = new ArrayList<>();
+
     int index;
 
     @Override
@@ -40,6 +41,13 @@ public class RecyleActivity extends AppCompatActivity {
         lists.add(new JDRefreshView(this));
         lists.add(new ElemeRefreshView(this));
         lists.add(new PlainRefreshView(this));
+
+        listsF.add(new CircleImageView(this));
+        listsF.add(new BarRefreshView(this));
+        listsF.add(new XMLRefreshView(this));
+        listsF.add(new JDRefreshView(this));
+        listsF.add(new ElemeRefreshView(this));
+        listsF.add(new PlainRefreshView(this));
 
 
         qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
@@ -65,6 +73,7 @@ public class RecyleActivity extends AppCompatActivity {
                     if (index >= lists.size())
                         index = 0;
                     qsRefreshLayout.setHeadRefreshView(lists.get(index));
+                    qsRefreshLayout.setFootRefreshView(listsF.get(index));
                 }
             }
         });

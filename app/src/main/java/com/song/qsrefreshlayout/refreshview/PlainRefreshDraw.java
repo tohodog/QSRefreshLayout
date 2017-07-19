@@ -17,7 +17,6 @@ import android.support.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-
 import com.song.qsrefreshlayout.R;
 
 import java.util.HashMap;

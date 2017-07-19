@@ -10,14 +10,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnticipateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -158,7 +154,7 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
         int h1 = h * 8 / 10;
 
         ObjectAnimator animator1 = ObjectAnimator.ofFloat(v, "translationX", 0.0f, flag ? -w : w);
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(v, "translationY", 0, -h1, -h,-h, -h1, -(float) Math.random() * h1/2);
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(v, "translationY", 0, -h1, -h, -h, -h1, -(float) Math.random() * h1 / 2);
         //animator2.setInterpolator(new AccelerateDecelerateInterpolator());
 
         AnimatorSet set = new AnimatorSet();
@@ -213,6 +209,8 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
+        if (offset < 0)
+            return getTargetOffset(offset);
         int de = (int) (density * 50);
         int t = getMeasuredHeight();
         int i = t - de + de * offset / triggerDistance();
@@ -221,10 +219,12 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public int getTargetOffset(int offset) {
+        boolean b = offset > 0;
+        offset = Math.abs(offset);
         int h = getMeasuredHeight();
         if (offset > h)
             offset = (int) (h + (offset - h) * 0.1f);
-        return offset;
+        return b ? offset : -offset;
     }
 
     @Override

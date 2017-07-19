@@ -11,7 +11,6 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -178,7 +177,7 @@ public class CircleImageView extends ImageView implements IRefreshView {
     @Override
     public int getThisViewOffset(int offset) {
         if (status == QSRefreshLayout.STATUS_REFRESHED)
-            return triggerDistance();
+            return offset > 0 ? triggerDistance() : -triggerDistance();
         return offset;
     }
 
