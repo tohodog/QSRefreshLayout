@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:orientation="vertical">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+
+        <FrameLayout
+            android:id="@+id/eleme_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/eleme_box_b" />
+
+        <RelativeLayout
+            android:id="@+id/eleme_content_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/eleme_box_l"
+
+                android:layout_width="20dp"
+                android:layout_height="3dp"
+                android:layout_alignLeft="@+id/eleme_box"
+                android:layout_alignTop="@+id/eleme_box"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="4dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/eleme_box_l" />
+
+            <ImageView
+                android:id="@+id/eleme_box_r"
+
+                android:layout_width="20dp"
+                android:layout_height="3dp"
+                android:layout_alignRight="@+id/eleme_box"
+                android:layout_alignTop="@+id/eleme_box"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="4dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/eleme_box_r" />
+
+            <ImageView
+                android:id="@+id/eleme_box"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/eleme_box" />
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/eleme_bg" />
 
 </LinearLayout>

@@ -13,7 +13,7 @@ import org.song.refreshlayout.QSRefreshLayout;
  * 通用动画刷新view
  */
 
-public abstract class AnimeRefreshView extends ImageView implements IRefreshView {
+public class AnimeRefreshView extends ImageView implements IRefreshView {
 
     private int[] animes;
     private int status;

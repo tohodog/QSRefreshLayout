@@ -11,6 +11,9 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 import org.song.refreshlayout.IRefreshView;
@@ -114,10 +117,13 @@ public class CircleImageView extends ImageView implements IRefreshView {
                 break;
 
             case QSRefreshLayout.STATUS_REFRESHED:
-                materialProgressDrawable.stop();
                 break;
             case QSRefreshLayout.STATUS_NORMAL:
+                materialProgressDrawable.stop();
+
                 flag = true;
+                setScaleX(1);
+                setScaleY(1);
                 break;
         }
 
@@ -135,6 +141,18 @@ public class CircleImageView extends ImageView implements IRefreshView {
             }
             materialProgressDrawable.setProgressRotation(-0.25f + progress * 0.4f);
         }
+        if (status == QSRefreshLayout.STATUS_REFRESHED) {
+            setScaleX(progress);
+            setScaleY(progress);
+        }
+    }
+
+    private void scale(View v) {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0, 1, 0,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        scaleAnimation.setDuration(500);
+        v.startAnimation(scaleAnimation);
     }
 
     @Override
@@ -159,6 +177,8 @@ public class CircleImageView extends ImageView implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
+        if (status == QSRefreshLayout.STATUS_REFRESHED)
+            return triggerDistance();
         return offset;
     }
 
@@ -169,7 +189,7 @@ public class CircleImageView extends ImageView implements IRefreshView {
 
     @Override
     public int completeAnimaDuration() {
-        return 0;
+        return 500;
     }
 
     @Override

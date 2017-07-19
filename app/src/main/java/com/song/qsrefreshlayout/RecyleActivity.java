@@ -9,27 +9,46 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.song.qsrefreshlayout.refreshview.ElemeRefreshView;
 import com.song.qsrefreshlayout.refreshview.JDRefreshView;
 import com.song.qsrefreshlayout.refreshview.PlainRefreshView;
 
+import org.song.refreshlayout.IRefreshView;
 import org.song.refreshlayout.QSRefreshLayout;
+import org.song.refreshlayout.refreshview.BarRefreshView;
+import org.song.refreshlayout.refreshview.CircleImageView;
+import org.song.refreshlayout.refreshview.XMLRefreshView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecyleActivity extends AppCompatActivity {
 
     QSRefreshLayout qsRefreshLayout;
     RecyclerView recyclerView;
 
+    List<IRefreshView> lists = new ArrayList<>();
+    int index;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recyle);
+        lists.add(new CircleImageView(this));
+        lists.add(new BarRefreshView(this));
+        lists.add(new XMLRefreshView(this));
+        lists.add(new JDRefreshView(this));
+        lists.add(new ElemeRefreshView(this));
+        lists.add(new PlainRefreshView(this));
+
+
         qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
         recyclerView = (RecyclerView) findViewById(R.id.list);
         initDate();
     }
 
     private void initDate() {
-        qsRefreshLayout.setHeadRefreshView(new JDRefreshView(this));
+        qsRefreshLayout.setHeadRefreshView(lists.get(0));
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean b, int status) {
@@ -40,6 +59,12 @@ public class RecyleActivity extends AppCompatActivity {
                             qsRefreshLayout.refreshComplete();
                         }
                     }, 3000);
+                }
+                if (status == QSRefreshLayout.STATUS_NORMAL) {
+                    index++;
+                    if (index >= lists.size())
+                        index = 0;
+                    qsRefreshLayout.setHeadRefreshView(lists.get(index));
                 }
             }
         });
@@ -56,7 +81,7 @@ public class RecyleActivity extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TextView tv = new TextView(RecyleActivity.this);
-            tv.setPadding(0,50,0,50);
+            tv.setPadding(0, 50, 0, 50);
             return new RecyclerView.ViewHolder(tv) {
             };
         }
@@ -64,7 +89,6 @@ public class RecyleActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ((TextView) holder.itemView).setText("RecyclerView==" + position);
-
         }
 
         @Override
