@@ -2,7 +2,7 @@
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
 <br>
-[DEMO.APK](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.0.apk)
+[============DEMO.APK=============](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.0.apk)
 <br>
 
 
