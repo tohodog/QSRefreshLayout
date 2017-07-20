@@ -33,7 +33,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     protected IRefreshView footRefreshView, headRefreshView;//刷新的view
     protected IRefreshView draggedRefreshView;//s
 
-    protected Interpolator decelerateInterpolator = new DecelerateInterpolator(2F);
+    protected Interpolator animeInterpolator = new DecelerateInterpolator(2F);//自动回弹动画插值器
     protected int currentOffset;//刷新时拖动的间隔
 
     protected boolean isToEdgeImmediatelyRefresh = true;//是否滚动到边缘可以立即触发刷新 不需要停一下
@@ -324,7 +324,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     protected void scrollAnimation(int start, int end, int time, final int... status) {
         ValueAnimator mScrollAnimator = new ValueAnimator();
         mScrollAnimator.setIntValues(start, end);
-        mScrollAnimator.setInterpolator(decelerateInterpolator);
+        mScrollAnimator.setInterpolator(animeInterpolator);
         mScrollAnimator.setDuration(time > 0 ? time : animaDuration);
         mScrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

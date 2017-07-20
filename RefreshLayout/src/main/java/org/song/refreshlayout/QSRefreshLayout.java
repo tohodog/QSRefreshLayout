@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 
 import org.song.refreshlayout.refreshview.BarRefreshView;
@@ -137,5 +138,14 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
 
     public interface RefreshListener {
         void changeStatus(boolean isHeadRefresh, int status);
+    }
+
+    //自动回弹动画插值器
+    public void setAnimeInterpolator(Interpolator animeInterpolator) {
+        this.animeInterpolator = animeInterpolator;
+    }
+
+    public int getRefreshStatus() {
+        return refreshStatus;
     }
 }
