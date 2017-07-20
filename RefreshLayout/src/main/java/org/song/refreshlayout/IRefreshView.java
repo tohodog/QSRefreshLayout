@@ -13,7 +13,7 @@ public interface IRefreshView {
 
     void updateStatus(int status);//更新刷新状态
 
-    void updateProgress(float progress);//刷新进度0~1
+    void updateProgress(float progress);//刷新进度 0 ~ 1(触发刷新)~ 更大
 
     boolean isBringToFront();//是否view放在顶层
 
