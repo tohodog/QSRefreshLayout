@@ -42,10 +42,10 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         headRefreshView.isHeadView(true);
         headRefreshView.getView().setVisibility(INVISIBLE);
         addView(headRefreshView.getView(), 0);
-        setOpenHeadRefresh(true);
+        isOpenHeadRefresh(true);
     }
 
-    public void setOpenHeadRefresh(boolean openHeadRefresh) {
+    public void isOpenHeadRefresh(boolean openHeadRefresh) {
         isOpenHeadRefresh = openHeadRefresh;
     }
 
@@ -58,10 +58,10 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         footRefreshView.isHeadView(false);
         footRefreshView.getView().setVisibility(INVISIBLE);
         addView(footRefreshView.getView(), 0);
-        setOpenFootRefresh(true);
+        isOpenFootRefresh(true);
     }
 
-    public void setOpenFootRefresh(boolean openFootRefresh) {
+    public void isOpenFootRefresh(boolean openFootRefresh) {
         isOpenFootRefresh = openFootRefresh;
     }
 

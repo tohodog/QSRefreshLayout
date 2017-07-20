@@ -61,7 +61,7 @@ public class RecyclerActivity extends AppCompatActivity {
     private void initDate() {
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
-            public void changeStatus(boolean b, int status) {
+            public void changeStatus(boolean isHead, int status) {
                 if (status == QSRefreshLayout.STATUS_REFRESHING) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
