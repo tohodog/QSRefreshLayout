@@ -31,6 +31,11 @@
 ## JAVA
 ```
 QSRefreshLayout qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
+
+qsRefreshLayout.setHeadRefreshView(new CircleImageView(this));
+                    
+qsRefreshLayout.setFootRefreshView(new BarRefreshView(this));
+                    
 qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean isHead, int status) {
