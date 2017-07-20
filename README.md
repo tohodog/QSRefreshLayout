@@ -1,4 +1,12 @@
 # QSRefreshLayout 
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
+<br>
+[============DEMO.APK=============](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.0.apk)
+<br>
+
+
+
 安卓上下拉框架
 ====
   * 刷新view模块化,可自由更换扩展 
@@ -23,6 +31,11 @@
 ## JAVA
 ```
 QSRefreshLayout qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
+
+qsRefreshLayout.setHeadRefreshView(new CircleImageView(this));
+                    
+qsRefreshLayout.setFootRefreshView(new BarRefreshView(this));
+                    
 qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean isHead, int status) {
@@ -45,7 +58,7 @@ qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
 
     void updateStatus(int status);//更新刷新状态
 
-    void updateProgress(float progress);//刷新进度0~1
+    void updateProgress(float progress);//刷新进度 0 ~ 1(触发刷新)~ 更大
 
     boolean isBringToFront();//是否view放在顶层
 
@@ -64,6 +77,5 @@ qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
     void isHeadView(boolean isHead);//是否顶部刷新view
 ```
 
-![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
-![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
+
 
