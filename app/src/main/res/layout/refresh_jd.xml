@@ -6,7 +6,7 @@
     android:padding="8dp"
     android:orientation="horizontal"
     android:gravity="center"
-    tools:context="com.song.qsrefreshlayout.RecyleActivity">
+    tools:context="com.song.qsrefreshlayout.RecyclerActivity">
 
 
     <RelativeLayout

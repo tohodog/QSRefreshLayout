@@ -22,7 +22,7 @@ import org.song.refreshlayout.refreshview.XMLRefreshView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyleActivity extends AppCompatActivity {
+public class RecyclerActivity extends AppCompatActivity {
 
     QSRefreshLayout qsRefreshLayout;
     RecyclerView recyclerView;
@@ -91,7 +91,7 @@ public class RecyleActivity extends AppCompatActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            TextView tv = new TextView(RecyleActivity.this);
+            TextView tv = new TextView(RecyclerActivity.this);
             tv.setPadding(0, 50, 0, 50);
             return new RecyclerView.ViewHolder(tv) {
             };
