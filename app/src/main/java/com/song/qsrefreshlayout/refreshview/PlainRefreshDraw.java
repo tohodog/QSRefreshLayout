@@ -58,7 +58,6 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
     private Matrix mAdditionalMatrix;
     private ValueAnimator mScrollAnimator;
 
-    private int mTop;
     private int mScreenWidth;
     private boolean mInverseDirection;
 
@@ -122,7 +121,6 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
     private void initiateDimens() {
         mScreenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
         mJetTopOffset = getTotalDragDistance * 0.5f;
-        mTop = -getTotalDragDistance;
     }
 
     private void createBitmaps() {
@@ -142,10 +140,6 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
         mLeftCloudsHeightCenter = mLeftClouds.getHeight() / 2;
     }
 
-    public void offsetTopAndBottom(int offset) {
-        mTop += offset;
-        invalidateSelf();
-    }
 
     @Override
     public void invalidateDrawable(@NonNull Drawable who) {
@@ -323,14 +317,12 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
         float offsetRightX = mScreenWidth - mRightClouds.getWidth();
         float offsetRightY = (needMoveCloudsWithContent
                 ? getTotalDragDistance * dragPercent - mLeftClouds.getHeight()
-                : dragYOffset)
-                + (overdrag ? mTop : 0);
+                : dragYOffset);//+ (overdrag ? mTop : 0);
 
         float offsetLeftX = 0;
         float offsetLeftY = (needMoveCloudsWithContent
                 ? getTotalDragDistance * dragPercent - mLeftClouds.getHeight()
-                : dragYOffset)
-                + (overdrag ? mTop : 0);
+                : dragYOffset);//+ (overdrag ? mTop : 0);
 
         // Magic with animation on loading process
         if (isRefreshing) {
@@ -396,8 +388,7 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
 
         float offsetX = (mScreenWidth / 2) - mFrontCloudWidthCenter;
         float offsetY = dragYOffset
-                - (parallax ? mFrontCloudHeightCenter + parallaxPercent : mFrontCloudHeightCenter)
-                + (overdrag ? mTop : 0);
+                - (parallax ? mFrontCloudHeightCenter + parallaxPercent : mFrontCloudHeightCenter);//+ (overdrag ? mTop : 0);
 
         float sx = overdrag ? scale + overdragPercent / 4 : scale;
         float sy = overdrag ? scale + overdragPercent / 2 : scale;
@@ -430,11 +421,13 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
 
         // Check overdrag
         if (dragPercent > 1.0f && !mEndOfRefreshing) {
-            rotateAngle = (dragPercent % 1) * 10;
+            if (dragPercent > 2)
+                dragPercent = 2;
+            rotateAngle = (dragPercent - 1) * 10;
             dragPercent = 1.0f;
         }
-        if (mEndOfRefreshing){
-            dragPercent=2-dragPercent;
+        if (mEndOfRefreshing) {
+            dragPercent = 2 - dragPercent;
         }
 
         float offsetX = ((mScreenWidth * dragPercent) / 2) - mJetWidthCenter;
@@ -578,7 +571,8 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
 
     @Override
     public void stop() {
-        mScrollAnimator.cancel();
+        if (mScrollAnimator != null)
+            mScrollAnimator.cancel();
         isRefreshing = false;
         mEndOfRefreshing = false;
         resetOriginals();

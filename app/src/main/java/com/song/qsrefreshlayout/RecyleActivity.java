@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.song.qsrefreshlayout.refreshview.ElemeRefreshView;
 import com.song.qsrefreshlayout.refreshview.JDRefreshView;
 import com.song.qsrefreshlayout.refreshview.PlainRefreshView;
+import com.song.qsrefreshlayout.refreshview.SunRefreshView;
 
 import org.song.refreshlayout.IRefreshView;
 import org.song.refreshlayout.QSRefreshLayout;
@@ -38,16 +39,18 @@ public class RecyleActivity extends AppCompatActivity {
         lists.add(new CircleImageView(this));
         lists.add(new BarRefreshView(this));
         lists.add(new XMLRefreshView(this));
+        lists.add(new PlainRefreshView(this));
+        lists.add(new SunRefreshView(this));
         lists.add(new JDRefreshView(this));
         lists.add(new ElemeRefreshView(this));
-        lists.add(new PlainRefreshView(this));
 
         listsF.add(new CircleImageView(this));
         listsF.add(new BarRefreshView(this));
         listsF.add(new XMLRefreshView(this));
+        listsF.add(new PlainRefreshView(this));
+        listsF.add(new SunRefreshView(this));
         listsF.add(new JDRefreshView(this));
         listsF.add(new ElemeRefreshView(this));
-        listsF.add(new PlainRefreshView(this));
 
 
         qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
@@ -56,7 +59,6 @@ public class RecyleActivity extends AppCompatActivity {
     }
 
     private void initDate() {
-        qsRefreshLayout.setHeadRefreshView(lists.get(0));
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean b, int status) {

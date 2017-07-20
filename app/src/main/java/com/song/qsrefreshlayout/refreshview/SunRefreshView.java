@@ -12,18 +12,18 @@ import org.song.refreshlayout.QSRefreshLayout;
  * Created by song on 2017/7/6.
  */
 
-public class PlainRefreshView extends ImageView implements IRefreshView {
+public class SunRefreshView extends ImageView implements IRefreshView {
 
     int mTotalDragDistance;
-    PlainRefreshDraw plainRefreshDraw;
+    SunRefreshDraw plainRefreshDraw;
 
-    public PlainRefreshView(Context context) {
+    public SunRefreshView(Context context) {
         super(context);
         float density = context.getResources().getDisplayMetrics().density;
         mTotalDragDistance = Math.round((float) 120 * density);
         setLayoutParams(new ViewGroup.LayoutParams(-1, mTotalDragDistance));
 
-        plainRefreshDraw = new PlainRefreshDraw(context, mTotalDragDistance);
+        plainRefreshDraw = new SunRefreshDraw(context, mTotalDragDistance);
         setImageDrawable(plainRefreshDraw);
     }
 
@@ -47,9 +47,7 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
 
     @Override
     public void updateProgress(float progress) {
-        //if (progress > 1)
-        //    progress = 1;
-        plainRefreshDraw.setPercent(progress);
+        plainRefreshDraw.setPercent(progress, true);
         invalidate();
     }
 
@@ -75,11 +73,17 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-        if (offset > 0)
-            offset = mTotalDragDistance;
-        else
-            offset = getTargetOffset(offset);
-        //plainRefreshDraw.offsetTopAndBottom(offset);
+        int t = getTargetOffset(offset);
+        if (offset > 0) {
+            if (t < triggerDistance())
+                offset = triggerDistance();
+            else
+                offset = getTargetOffset(offset);
+        } else {
+            offset = t + triggerDistance() - mTotalDragDistance;
+            if (offset < -mTotalDragDistance)
+                offset = -mTotalDragDistance;
+        }
         return offset;
     }
 

@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
     ViewGroup eleme_content, eleme_content_box;
     float density;
 
-    public ElemeRefreshView(@NonNull Context context) {
+    public ElemeRefreshView(Context context) {
         super(context);
         density = context.getResources().getDisplayMetrics().density;
         triggerDistance = (int) (density * 100);
@@ -209,12 +208,18 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-        if (offset < 0)
-            return getTargetOffset(offset);
         int de = (int) (density * 50);
-        int t = getMeasuredHeight();
-        int i = t - de + de * offset / triggerDistance();
-        return i > t ? t : i;
+        if (offset < 0) {
+            int t = getTargetOffset(offset);
+            float f = 1 + 1.f * offset / triggerDistance();
+            if (f < 0)
+                f = 0;
+            return (int) (t - de * f);
+        } else {
+            int t = getMeasuredHeight();
+            int i = t - de + de * offset / triggerDistance();
+            return i > t ? t : i;
+        }
     }
 
     @Override
