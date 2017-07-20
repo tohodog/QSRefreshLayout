@@ -4,3 +4,7 @@
 1.自定义上下拉的样式,可自由更换扩展<br>
 2.支持任意可滑动的控件<br>
 
+
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
+
