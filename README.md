@@ -1,6 +1,69 @@
-# QSRefreshLayout
-安卓上下拉框架,距离填坑遥遥无期~<br>
-暂定需求<br>
-1.自定义上下拉的样式,可自由更换扩展<br>
-2.支持任意可滑动的控件<br>
+# QSRefreshLayout 
+安卓上下拉框架
+====
+  * 刷新view模块化,可自由更换扩展 
+  * 轻松实现各种刷新效果
+  * 支持任意可滑动的控件
+
+## XML
+```
+<org.song.refreshlayout.QSRefreshLayout
+        android:id="@+id/qs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+            
+</org.song.refreshlayout.QSRefreshLayout>
+```
+## JAVA
+```
+QSRefreshLayout qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
+qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
+            @Override
+            public void changeStatus(boolean isHead, int status) {
+                if (status == QSRefreshLayout.STATUS_REFRESHING) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            qsRefreshLayout.refreshComplete();
+                        }
+                    }, 3000);
+                }
+            }
+        });
+```
+
+## DIY
+实现IRefreshView接口
+```
+    View getView();
+
+    void updateStatus(int status);//更新刷新状态
+
+    void updateProgress(float progress);//刷新进度0~1
+
+    boolean isBringToFront();//是否view放在顶层
+
+    float dragRate();//滑动速度控制
+
+    int triggerDistance();//触发刷新的距离 [实际触摸距离*dragRate()>triggerDistance() 触发刷新
+
+    int maxDistance();//最大滑动距离 <=0不限制
+
+    int getThisViewOffset(int offset);//根据触摸位移 确定该view的位移 大于0=headview 小于0=footview
+
+    int getTargetOffset(int offset);//根据触摸位移 确定滚动view的位移 大于0=headview 小于0=footview
+
+    int completeAnimaDuration();//完成刷新后到消失 的动画时间, <=0使用默认时间
+
+    void isHeadView(boolean isHead);//是否顶部刷新view
+```
+
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
 
