@@ -131,14 +131,15 @@ public class CircleImageView extends ImageView implements IRefreshView {
     @Override
     public void updateProgress(float progress) {
         if (status == QSRefreshLayout.STATUS_DRAGGING | status == QSRefreshLayout.STATUS_DRAGGING_REACH) {
-            if (progress <= 1) {
-                materialProgressDrawable.showArrow(true);
-                materialProgressDrawable.setArrowScale(progress);
-                materialProgressDrawable.setAlpha((int) (minAlpha + (255 - minAlpha) * progress));
-                float max = .8f;
-                materialProgressDrawable.setStartEndTrim(0, progress * max);
-            }
+
             materialProgressDrawable.setProgressRotation(-0.25f + progress * 0.4f);
+            if (progress > 1)
+                progress = 1;
+            materialProgressDrawable.showArrow(true);
+            materialProgressDrawable.setArrowScale(progress);
+            materialProgressDrawable.setAlpha((int) (minAlpha + (255 - minAlpha) * progress));
+            float max = .8f;
+            materialProgressDrawable.setStartEndTrim(0, progress * max);
         }
         if (status == QSRefreshLayout.STATUS_REFRESHED) {
             setScaleX(progress);
