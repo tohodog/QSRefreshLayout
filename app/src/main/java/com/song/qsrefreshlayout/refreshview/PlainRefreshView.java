@@ -1,6 +1,7 @@
 package com.song.qsrefreshlayout.refreshview;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,13 +19,22 @@ public class PlainRefreshView extends ImageView implements IRefreshView {
     PlainRefreshDraw plainRefreshDraw;
 
     public PlainRefreshView(Context context) {
-        super(context);
-        float density = context.getResources().getDisplayMetrics().density;
-        mTotalDragDistance = Math.round((float) 120 * density);
-        setLayoutParams(new ViewGroup.LayoutParams(-1, mTotalDragDistance));
+        this(context, null);
+    }
 
-        plainRefreshDraw = new PlainRefreshDraw(context, mTotalDragDistance);
+    public PlainRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        float density = context.getResources().getDisplayMetrics().density;
+        setLayoutParams(new ViewGroup.LayoutParams(-1, mTotalDragDistance = Math.round((float) 120 * density)));
+
+        plainRefreshDraw = new PlainRefreshDraw(getContext(), mTotalDragDistance);
         setImageDrawable(plainRefreshDraw);
+    }
+
+    @Override//确定view大小
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        plainRefreshDraw.setGetTotalDragDistance(mTotalDragDistance = getMeasuredHeight());
     }
 
     @Override

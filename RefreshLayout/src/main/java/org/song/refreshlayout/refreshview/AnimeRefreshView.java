@@ -2,7 +2,9 @@ package org.song.refreshlayout.refreshview;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.song.refreshlayout.IRefreshView;
@@ -20,8 +22,13 @@ public class AnimeRefreshView extends ImageView implements IRefreshView {
     private int tempIndex;
     private AnimationDrawable animationDrawable;
 
+
     public AnimeRefreshView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public AnimeRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     public void setDrawAnimes(int[] animes) {

@@ -91,6 +91,8 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
     private Random mRandom;
     private boolean mEndOfRefreshing;
 
+
+
     private int getTotalDragDistance;
 
     private enum AnimationPart {
@@ -120,6 +122,10 @@ public class PlainRefreshDraw extends Drawable implements Drawable.Callback, Ani
 
     private void initiateDimens() {
         mScreenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+        mJetTopOffset = getTotalDragDistance * 0.5f;
+    }
+    public void setGetTotalDragDistance(int getTotalDragDistance) {
+        this.getTotalDragDistance = getTotalDragDistance;
         mJetTopOffset = getTotalDragDistance * 0.5f;
     }
 

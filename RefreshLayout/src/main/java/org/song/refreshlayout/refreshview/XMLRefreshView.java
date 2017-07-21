@@ -3,6 +3,7 @@ package org.song.refreshlayout.refreshview;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,11 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
             refreshed = "刷新完成";
 
     public XMLRefreshView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public XMLRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         refreshView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.refresh, this, false);
         refreshTV = (TextView) refreshView.findViewById(R.id.refresh_tv);
         refreshIV = (ImageView) refreshView.findViewById(R.id.refresh_iv);
@@ -136,7 +141,7 @@ public class XMLRefreshView extends FrameLayout implements IRefreshView {
             dragging = isHead ? "下拉刷新" : "上拉刷新";
     }
 
-    public void setBlackStyle(){
+    public void setBlackStyle() {
 
     }
 

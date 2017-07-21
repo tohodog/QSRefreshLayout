@@ -2,7 +2,7 @@ package com.song.qsrefreshlayout.refreshview;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,8 +25,12 @@ public class JDRefreshView extends FrameLayout implements IRefreshView {
     TextView jd_text;
     int status;
 
-    public JDRefreshView(@NonNull Context context) {
-        super(context);
+    public JDRefreshView(Context context) {
+        this(context, null);
+    }
+
+    public JDRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         View refreshView = LayoutInflater.from(context).inflate(R.layout.refresh_jd, this, false);
         jd_text = (TextView) refreshView.findViewById(R.id.jd_text);
         jd_people = (ImageView) refreshView.findViewById(R.id.jd_people);

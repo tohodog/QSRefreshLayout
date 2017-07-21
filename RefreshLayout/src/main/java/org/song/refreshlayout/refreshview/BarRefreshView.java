@@ -2,6 +2,7 @@ package org.song.refreshlayout.refreshview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,7 +21,11 @@ public class BarRefreshView extends View implements IRefreshView {
     private SwipeProgressBar swipeProgressBar;
 
     public BarRefreshView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public BarRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         float density = context.getResources().getDisplayMetrics().density;
 
         swipeProgressBar = new SwipeProgressBar(this);
@@ -37,7 +42,7 @@ public class BarRefreshView extends View implements IRefreshView {
     @Override//确定view大小
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        swipeProgressBar.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+        swipeProgressBar.setBounds(0, 0, getMeasuredWidth(), height = getMeasuredHeight());
     }
 
 

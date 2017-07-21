@@ -38,6 +38,7 @@ public class SunRefreshDraw extends SunBaseRefreshDraw implements Animatable {
 
     private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
 
+
     private int getTotalDragDistance;
 
     private Matrix mMatrix;
@@ -91,6 +92,13 @@ public class SunRefreshDraw extends SunBaseRefreshDraw implements Animatable {
         mSunTopOffset = (getTotalDragDistance * 0.1f);
 
         createBitmaps();
+    }
+
+    public void setGetTotalDragDistance(int getTotalDragDistance) {
+        this.getTotalDragDistance = getTotalDragDistance;
+        mTownInitialTopOffset = (getTotalDragDistance - mTownHeight * TOWN_INITIAL_SCALE);
+        mTownFinalTopOffset = (getTotalDragDistance - mTownHeight * TOWN_FINAL_SCALE);
+        mSunTopOffset = (getTotalDragDistance * 0.1f);
     }
 
     private void createBitmaps() {

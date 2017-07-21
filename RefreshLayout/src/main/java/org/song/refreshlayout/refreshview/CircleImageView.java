@@ -9,6 +9,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.view.ViewCompat;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -40,7 +41,11 @@ public class CircleImageView extends ImageView implements IRefreshView {
 
     @SuppressWarnings("deprecation")
     public CircleImageView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public CircleImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init();
     }
 
@@ -78,13 +83,15 @@ public class CircleImageView extends ImageView implements IRefreshView {
         setLayoutParams(new ViewGroup.LayoutParams(diameter, diameter));
     }
 
+    @Override//锁死view大小
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension(diameter, diameter);
+    }
+
+    //设置大小
     public void setRadius(int radius) {
         this.radius = radius;
         init();
-    }
-
-    private boolean elevationSupported() {
-        return android.os.Build.VERSION.SDK_INT >= 21;
     }
 
     public void setColorScheme(int... color1) {
@@ -195,6 +202,10 @@ public class CircleImageView extends ImageView implements IRefreshView {
     @Override
     public void isHeadView(boolean isHead) {
 
+    }
+
+    private boolean elevationSupported() {
+        return android.os.Build.VERSION.SDK_INT >= 21;
     }
 
 

@@ -26,12 +26,20 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
 
     public QSRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initData();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+
+            }
+        });
     }
 
     private void initData() {
-        setHeadRefreshView(new CircleImageView(getContext()));
-        setFootRefreshView(new BarRefreshView(getContext()));
+        if (!ensureRefreshView()) {
+            setHeadRefreshView(new CircleImageView(getContext()));
+            setFootRefreshView(new BarRefreshView(getContext()));
+        }
     }
 
     public void setHeadRefreshView(IRefreshView headRefreshView) {
@@ -86,6 +94,31 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
             }
         }
         return mTarget;
+    }
+
+    protected boolean ensureRefreshView() {
+        boolean b = false;
+        if (getChildCount() > 0) {
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                if (child instanceof IRefreshView) {
+                    IRefreshView v = (IRefreshView) child;
+                    if (!b) {
+                        headRefreshView = v;
+                        headRefreshView.isHeadView(true);
+                        headRefreshView.getView().setVisibility(INVISIBLE);
+                        isOpenHeadRefresh(true);
+                    } else {
+                        footRefreshView = v;
+                        footRefreshView.isHeadView(false);
+                        footRefreshView.getView().setVisibility(INVISIBLE);
+                        isOpenFootRefresh(true);
+                    }
+                    b = true;
+                }
+            }
+        }
+        return b;
     }
 
     @Override

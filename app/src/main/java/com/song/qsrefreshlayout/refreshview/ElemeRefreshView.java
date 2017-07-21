@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,11 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
     float density;
 
     public ElemeRefreshView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public ElemeRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         density = context.getResources().getDisplayMetrics().density;
         triggerDistance = (int) (density * 100);
 
@@ -45,8 +50,6 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
         eleme_content_box = (ViewGroup) refreshView.findViewById(R.id.eleme_content_box);
 
         addView(refreshView);
-
-
     }
 
     @Override
