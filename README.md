@@ -16,18 +16,28 @@
 
 ## XML
 ```
-<org.song.refreshlayout.QSRefreshLayout
+  <org.song.refreshlayout.QSRefreshLayout
         android:id="@+id/qs"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         
+        <!--head-->
+        <org.song.refreshlayout.refreshview.BarRefreshView
+            android:layout_width="match_parent"
+            android:layout_height="2dp" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
-            android:background="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="#ffffff" />
             
-</org.song.refreshlayout.QSRefreshLayout>
+        <!--foot-->
+        <org.song.refreshlayout.refreshview.CircleImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </org.song.refreshlayout.QSRefreshLayout>
 ```
 ## JAVA
 ```

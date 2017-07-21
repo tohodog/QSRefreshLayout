@@ -98,11 +98,13 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
 
     protected boolean ensureRefreshView() {
         boolean b = false;
-        if (getChildCount() > 0) {
+        if (getChildCount() > 1) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 if (child instanceof IRefreshView) {
                     IRefreshView v = (IRefreshView) child;
+                    if (getChildCount() == 2)
+                        b = i == 1;
                     if (!b) {
                         headRefreshView = v;
                         headRefreshView.isHeadView(true);
