@@ -357,6 +357,13 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         mScrollAnimator.start();
     }
 
+    //给IOSRefreshView用的 直接进入刷新
+    public void forcedIntoRefresh(int triggerDistance) {
+        if (isBeingDragged()) {
+            setRefreshStatus(STATUS_REFRESHING);//刷新
+            scrollAnimation(currentOffset, triggerDistance, animaDuration);
+        }
+    }
 
     public boolean isBeingDragged() {
         return refreshStatus == STATUS_DRAGGING | refreshStatus == STATUS_DRAGGING_REACH;
