@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import org.song.refreshlayout.IRefreshView;
 import org.song.refreshlayout.QSRefreshLayout;
 import org.song.refreshlayout.refreshview.BarRefreshView;
 import org.song.refreshlayout.refreshview.CircleImageView;
+import org.song.refreshlayout.refreshview.IOSRefreshView;
 import org.song.refreshlayout.refreshview.XMLRefreshView;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class RecyclerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recyle);
+        lists.add(new IOSRefreshView(this));
         lists.add(new CircleImageView(this));
         lists.add(new BarRefreshView(this));
         lists.add(new XMLRefreshView(this));
@@ -51,6 +54,7 @@ public class RecyclerActivity extends AppCompatActivity {
         listsF.add(new SunRefreshView(this));
         listsF.add(new JDRefreshView(this));
         listsF.add(new ElemeRefreshView(this));
+        listsF.add(new CircleImageView(this));
 
 
         qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
@@ -59,6 +63,9 @@ public class RecyclerActivity extends AppCompatActivity {
     }
 
     private void initDate() {
+        //qsRefreshLayout.setHeadRefreshView(new IOSRefreshView(this));
+
+        qsRefreshLayout.enterHeadRefreshing(true);
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean isHead, int status) {

@@ -392,6 +392,8 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     //滑动view
     protected abstract View ensureTarget();
 
+    //protected abstract boolean ensureRefreshView();
+
     //判断是否滑动到顶部
     protected abstract boolean canChildScrollUp();
 

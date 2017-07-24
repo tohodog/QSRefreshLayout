@@ -34,6 +34,9 @@ public class SunRefreshView extends ImageView implements IRefreshView {
 
     @Override//确定view大小
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int specMode = MeasureSpec.getMode(heightMeasureSpec);
+        if (specMode != MeasureSpec.EXACTLY)//高度不确定时(xml设置为wrap_content时) 自己设置默认值
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(mTotalDragDistance, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         plainRefreshDraw.setGetTotalDragDistance(mTotalDragDistance = getMeasuredHeight());
     }

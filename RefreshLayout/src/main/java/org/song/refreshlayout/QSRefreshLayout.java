@@ -3,6 +3,7 @@ package org.song.refreshlayout;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.AbsListView;
@@ -36,7 +37,7 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
     }
 
     private void initData() {
-        if (!ensureRefreshView()) {
+        if (headRefreshView == null && footRefreshView == null) {
             setHeadRefreshView(new CircleImageView(getContext()));
             setFootRefreshView(new BarRefreshView(getContext()));
         }
@@ -96,32 +97,65 @@ public class QSRefreshLayout extends QSBaseRefreshLayout {
         return mTarget;
     }
 
-    protected boolean ensureRefreshView() {
-        boolean b = false;
-        if (getChildCount() > 1) {
-            for (int i = 0; i < getChildCount(); i++) {
-                View child = getChildAt(i);
-                if (child instanceof IRefreshView) {
-                    IRefreshView v = (IRefreshView) child;
-                    if (getChildCount() == 2)
-                        b = i == 1;
-                    if (!b) {
-                        headRefreshView = v;
-                        headRefreshView.isHeadView(true);
-                        headRefreshView.getView().setVisibility(INVISIBLE);
-                        isOpenHeadRefresh(true);
-                    } else {
-                        footRefreshView = v;
-                        footRefreshView.isHeadView(false);
-                        footRefreshView.getView().setVisibility(INVISIBLE);
-                        isOpenFootRefresh(true);
-                    }
-                    b = true;
-                }
+
+    //监控xml的head foot
+    @Override
+    public void addView(View child, int index, LayoutParams params) {
+        super.addView(child, index, params);
+        //代码设置的view忽略
+        if (child instanceof IRefreshView && child != footRefreshView && child != headRefreshView) {
+            //Log.e("addView", "" + index);
+            IRefreshView v = (IRefreshView) child;
+            if (ensureTarget() == null) {
+                if (headRefreshView != null)
+                    removeView(headRefreshView.getView());
+                headRefreshView = v;
+                headRefreshView.isHeadView(true);
+                headRefreshView.getView().setVisibility(INVISIBLE);
+                isOpenHeadRefresh(true);
+            } else {
+                if (footRefreshView != null)
+                    removeView(footRefreshView.getView());
+                footRefreshView = v;
+                footRefreshView.isHeadView(false);
+                footRefreshView.getView().setVisibility(INVISIBLE);
+                isOpenFootRefresh(true);
             }
         }
-        return b;
     }
+
+//    private boolean ensureRefreshViewFlag;
+//
+//    protected boolean ensureRefreshView() {
+//        if (ensureRefreshViewFlag)
+//            return true;
+//        ensureRefreshViewFlag = true;
+//        boolean b = false;
+//        if (getChildCount() > 1) {
+//            for (int i = 0; i < getChildCount(); i++) {
+//                View child = getChildAt(i);
+//                if (child instanceof IRefreshView) {
+//                    IRefreshView v = (IRefreshView) child;
+//                    if (getChildCount() == 2)
+//                        b = i == 1;
+//                    if (!b) {
+//                        headRefreshView = v;
+//                        headRefreshView.isHeadView(true);
+//                        headRefreshView.getView().setVisibility(INVISIBLE);
+//                        isOpenHeadRefresh(true);
+//                    } else {
+//                        footRefreshView = v;
+//                        footRefreshView.isHeadView(false);
+//                        footRefreshView.getView().setVisibility(INVISIBLE);
+//                        isOpenFootRefresh(true);
+//                    }
+//                    b = true;
+//                }
+//            }
+//        }
+//        Log.e("ensureRefreshView", "" + b);
+//        return b;
+//    }
 
     @Override
     protected boolean canChildScrollUp() {

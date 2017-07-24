@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.song.refreshlayout.refreshview.BarRefreshView
+        <org.song.refreshlayout.refreshview.IOSRefreshView
             android:layout_width="match_parent"
-            android:layout_height="2dp" />
+            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
@@ -22,9 +22,9 @@
             android:layout_height="match_parent"
             android:background="#ffffff" />
 
-        <org.song.refreshlayout.refreshview.CircleImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <org.song.refreshlayout.refreshview.BarRefreshView
+            android:layout_width="match_parent"
+            android:layout_height="2dp" />
 
     </org.song.refreshlayout.QSRefreshLayout>
 
