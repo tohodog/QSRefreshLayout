@@ -60,7 +60,7 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
 
         circleRadius = (int) (density * 16);
 
-        setLayoutParams(new ViewGroup.LayoutParams(-1, height = circleRadius * 9));
+        setLayoutParams(new ViewGroup.LayoutParams(-1, height = circleRadius * 8));
 
         imageView = new ImageView(context);
         imageView.setImageResource(R.drawable.loading);
@@ -100,9 +100,14 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
             int w = getWidth();
             float y = circleRadius * 1.5f;
             subCircleRadius = (int) (circleRadius * (0.9f - .9f * offset / triggerDistance()));
+            float y2 = y + offset + (circleRadius - subCircleRadius);
+            if (!isHead) {
+                y = height - y;
+                y2 = height - y2;
+            }
             canvas.drawCircle(w / 2, y, circleRadius, mPaint);//大圆
-            canvas.drawCircle(w / 2, y + offset, subCircleRadius, mPaint);//小圆
-            drawBezierCurve(canvas, y);//贝赛尔曲线
+            canvas.drawCircle(w / 2, y2, subCircleRadius, mPaint);//小圆
+            drawBezierCurve(canvas, y, y2);//贝赛尔曲线
 
             //刷新图标
             int rotatelen = 290;
@@ -133,14 +138,14 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
      * 绘制贝塞尔曲线
      * 计算两圆切点...
      */
-    private void drawBezierCurve(Canvas canvas, float y) {
+    private void drawBezierCurve(Canvas canvas, float y, float y2) {
         int w = getWidth();
         mPath.reset();
         mPath.moveTo(w / 2 - circleRadius, y);
         mPath.lineTo(w / 2 + circleRadius, y);
-        mPath.quadTo(w / 2 + subCircleRadius, y + offset / 2, w / 2 + subCircleRadius, y + offset);
-        mPath.lineTo(w / 2 - subCircleRadius, y + offset);
-        mPath.quadTo(w / 2 - subCircleRadius, y + offset / 2, w / 2 - circleRadius, y);
+        mPath.quadTo(w / 2 + subCircleRadius, (y + y2) / 2, w / 2 + subCircleRadius, y2);
+        mPath.lineTo(w / 2 - subCircleRadius, y2);
+        mPath.quadTo(w / 2 - subCircleRadius, (y + y2) / 2, w / 2 - circleRadius, y);
         mPath.close();  // 闭合
         canvas.drawPath(mPath, mPaint);
     }
@@ -194,7 +199,8 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-        if (Math.abs(offset) > circleRadius * 3f) {
+        offset = Math.abs(offset);
+        if (offset > circleRadius * 3f) {
             this.offset = (int) (offset - circleRadius * 3f);
             return isHead ? getMeasuredHeight() : -getMeasuredHeight();
         } else {
@@ -219,7 +225,14 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
     @Override
     public void isHeadView(boolean isHead) {
         this.isHead = isHead;
-        if (!isHead)
-            throw new IllegalArgumentException("foot not support");
+        FrameLayout.LayoutParams l = (LayoutParams) imageView.getLayoutParams();
+        if (isHead) {
+            l.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+            l.topMargin = circleRadius / 2;
+        } else {
+            l.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+            l.bottomMargin = circleRadius / 2;
+        }
+        imageView.setLayoutParams(l);
     }
 }

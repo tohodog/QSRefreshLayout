@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -47,6 +48,7 @@ public class RecyclerActivity extends AppCompatActivity {
         lists.add(new JDRefreshView(this));
         lists.add(new ElemeRefreshView(this));
 
+        listsF.add(new IOSRefreshView(this));
         listsF.add(new CircleImageView(this));
         listsF.add(new BarRefreshView(this));
         listsF.add(new XMLRefreshView(this));
@@ -54,7 +56,6 @@ public class RecyclerActivity extends AppCompatActivity {
         listsF.add(new SunRefreshView(this));
         listsF.add(new JDRefreshView(this));
         listsF.add(new ElemeRefreshView(this));
-        listsF.add(new CircleImageView(this));
 
 
         qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
@@ -63,9 +64,9 @@ public class RecyclerActivity extends AppCompatActivity {
     }
 
     private void initDate() {
-        //qsRefreshLayout.setHeadRefreshView(new IOSRefreshView(this));
+        qsRefreshLayout.setFootRefreshView(new IOSRefreshView(this));
 
-        qsRefreshLayout.enterHeadRefreshing(true);
+        //qsRefreshLayout.enterHeadRefreshing(true);
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean isHead, int status) {
@@ -94,20 +95,40 @@ public class RecyclerActivity extends AppCompatActivity {
     }
 
 
-    class Adpter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class Adpter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TextView tv = new TextView(RecyclerActivity.this);
             tv.setPadding(0, 50, 0, 50);
+            tv.setLayoutParams(new ViewGroup.LayoutParams(-1,-2));
             return new RecyclerView.ViewHolder(tv) {
             };
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((TextView) holder.itemView).setText("RecyclerView==" + position);
+            String s = "RecyclerView==" + position;
+            if (position == 0)
+                s += "  点击自动进入刷新-有动画";
+            if (position == 1)
+                s += "  点击自动进入刷新-无动画";
+            ((TextView) holder.itemView).setText(s);
+            holder.itemView.setTag(position);
+            holder.itemView.setOnClickListener(l);
         }
+
+        View.OnClickListener l = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag = (int) v.getTag();
+                if (tag == 0)
+                    qsRefreshLayout.enterHeadRefreshing(true);
+                if (tag == 1)
+                    qsRefreshLayout.enterHeadRefreshing(false);
+
+            }
+        };
 
         @Override
         public int getItemCount() {
