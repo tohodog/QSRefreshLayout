@@ -39,8 +39,9 @@ public class RecyclerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recyle);
-        lists.add(new IOSRefreshView(this));
+
         lists.add(new CircleImageView(this));
+        lists.add(new IOSRefreshView(this));
         lists.add(new BarRefreshView(this));
         lists.add(new XMLRefreshView(this));
         lists.add(new PlainRefreshView(this));
@@ -48,8 +49,8 @@ public class RecyclerActivity extends AppCompatActivity {
         lists.add(new JDRefreshView(this));
         lists.add(new ElemeRefreshView(this));
 
-        listsF.add(new IOSRefreshView(this));
         listsF.add(new CircleImageView(this));
+        listsF.add(new IOSRefreshView(this));
         listsF.add(new BarRefreshView(this));
         listsF.add(new XMLRefreshView(this));
         listsF.add(new PlainRefreshView(this));

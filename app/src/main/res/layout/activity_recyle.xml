@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.song.refreshlayout.refreshview.IOSRefreshView
+        <org.song.refreshlayout.refreshview.CircleImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -24,7 +24,7 @@
 
         <org.song.refreshlayout.refreshview.BarRefreshView
             android:layout_width="match_parent"
-            android:layout_height="2dp" />
+            android:layout_height="3dp" />
 
     </org.song.refreshlayout.QSRefreshLayout>
 
