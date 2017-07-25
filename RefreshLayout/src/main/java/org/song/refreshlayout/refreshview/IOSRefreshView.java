@@ -184,7 +184,7 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public float dragRate() {
-        return .6f;
+        return .8f;
     }
 
     @Override

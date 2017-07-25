@@ -291,17 +291,18 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
 
     //自动进入刷新状态[isAnime是否显示动画过程
     public void enterHeadRefreshing(boolean isAnime) {
-        draggedRefreshView = headRefreshView;
-        enterRefreshing(isAnime);
+        enterRefreshing(isAnime, headRefreshView);
     }
 
     //自动进入刷新状态[isAnime是否显示动画过程
     public void enterFootRefreshing(boolean isAnime) {
-        draggedRefreshView = footRefreshView;
-        enterRefreshing(isAnime);
+        enterRefreshing(isAnime, headRefreshView);
     }
 
-    private void enterRefreshing(final boolean isAnime) {
+    private void enterRefreshing(final boolean isAnime, IRefreshView iRefreshView) {
+        if (refreshStatus != STATUS_NORMAL)
+            return;
+        draggedRefreshView = iRefreshView;
         if (draggedRefreshView == null)
             return;
         post(new Runnable() {

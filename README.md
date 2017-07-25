@@ -2,7 +2,7 @@
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
 <br>
-[============DEMO.APK=============](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.0.apk)
+[============DEMO.APK=============](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.1.apk)
 <br>
 
 
@@ -46,6 +46,8 @@ QSRefreshLayout qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
 qsRefreshLayout.setHeadRefreshView(new CircleImageView(this));
                     
 qsRefreshLayout.setFootRefreshView(new BarRefreshView(this));
+
+qsRefreshLayout.enterHeadRefreshing(true);
                     
 qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override

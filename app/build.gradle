@@ -19,9 +19,9 @@ android {
             shrinkResources true//移除无用的Resources文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //signingConfig signingConfigs.release //加签名
-
         }
     }
+
     //忽略xml多国语言问题
     lintOptions {
         disable 'MissingTranslation', 'ExtraTranslation'
