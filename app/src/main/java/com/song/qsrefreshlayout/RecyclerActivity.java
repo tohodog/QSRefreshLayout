@@ -64,9 +64,8 @@ public class RecyclerActivity extends AppCompatActivity {
     }
 
     private void initDate() {
-        qsRefreshLayout.setFootRefreshView(new IOSRefreshView(this));
-
-        //qsRefreshLayout.enterHeadRefreshing(true);
+        //qsRefreshLayout.setFootRefreshView(new IOSRefreshView(this));
+        qsRefreshLayout.enterHeadRefreshing(true);
         qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
             @Override
             public void changeStatus(boolean isHead, int status) {
