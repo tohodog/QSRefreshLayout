@@ -92,6 +92,8 @@ public class RecyclerActivity extends AppCompatActivity {
         l.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(l);
         recyclerView.setAdapter(new Adpter());
+
+
     }
 
 

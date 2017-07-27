@@ -61,7 +61,11 @@ qsRefreshLayout.setRefreshListener(new QSRefreshLayout.RefreshListener() {
                     }, 3000);
                 }
             }
-        });
+});
+        
+//refreshview setting
+CircleImageView circleImageView= (CircleImageView) qsRefreshLayout.getHeadRefreshView();
+circleImageView.setColorScheme(R.color.xxx,...);
 ```
 
 ## DIY
