@@ -113,22 +113,18 @@ public class DemoRefreshView extends FrameLayout implements IRefreshView {
         int g1 = (startColor >> 8) & 0x000000FF;
         int b1 = startColor & 0x000000FF;
 
-        Log.e("b1", "" + b1);
         int endColor = Color.RED;
         int a2 = (endColor >> 24) & 0x000000FF;
         int r2 = (endColor >> 16) & 0x000000FF;
         int g2 = (endColor >> 8) & 0x000000FF;
         int b2 = endColor & 0x000000FF;
-        Log.e("b2", "" + b2);
 
         int r = (int) (r1 + (r2 - r1) * progress);
         int g = (int) (g1 + (g2 - g1) * progress);
         int b = (int) (b1 + (b2 - b1) * progress);
         int a = (int) (a1 + (a2 - a1) * progress);
-        Log.e("b", "" + b);
 
         int newColor = Color.argb(a, r, g, b);
-        Log.e("newColor", "" + newColor);
 
         setBackgroundColor(newColor);
 
