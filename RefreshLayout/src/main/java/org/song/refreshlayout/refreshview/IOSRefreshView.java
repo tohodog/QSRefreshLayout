@@ -28,7 +28,6 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
     private float density;
     private Paint mPaint, mPaint1, mPaint2;
     private int circleRadius;
-    private int subCircleRadius;
     private int offset;
     private int height;
 
@@ -60,11 +59,11 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
 
         circleRadius = (int) (density * 16);
 
-        setLayoutParams(new ViewGroup.LayoutParams(-1, height = circleRadius * 8));
+        setLayoutParams(new ViewGroup.LayoutParams(-1, height = circleRadius * 7));
 
         imageView = new ImageView(context);
         imageView.setImageResource(R.drawable.loading);
-        FrameLayout.LayoutParams l = new LayoutParams((int) (30 * density), (int) (30 * density));
+        FrameLayout.LayoutParams l = new LayoutParams(circleRadius * 2, circleRadius * 2);
         l.gravity = Gravity.CENTER_HORIZONTAL;
         l.topMargin = circleRadius / 2;
         imageView.setLayoutParams(l);
@@ -90,27 +89,30 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
     }
 
     RectF oval = new RectF();
-    int rotate = 30;
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (status == QSRefreshLayout.STATUS_DRAGGING | status == QSRefreshLayout.STATUS_DRAGGING_REACH) {
+            float pro = 1f * offset / (triggerDistance() - 3 * circleRadius);
             int w = getWidth();
             float y = circleRadius * 1.5f;
-            subCircleRadius = (int) (circleRadius * (0.9f - .9f * offset / triggerDistance()));
+            float circleRadius = this.circleRadius * (1 - pro / 8);
+            float subCircleRadius = (int) (circleRadius * (1 - pro * .7));
             float y2 = y + offset + (circleRadius - subCircleRadius);
             if (!isHead) {
                 y = height - y;
                 y2 = height - y2;
             }
+
             canvas.drawCircle(w / 2, y, circleRadius, mPaint);//大圆
             canvas.drawCircle(w / 2, y2, subCircleRadius, mPaint);//小圆
-            drawBezierCurve(canvas, y, y2);//贝赛尔曲线
+            drawBezierCurve(canvas, y, y2, circleRadius, subCircleRadius);//贝赛尔曲线
 
             //刷新图标
-            int rotatelen = 290;
+            int rotate = -10 + (int) (90 * pro);
+            int rotatelen = 280;
             float radius = circleRadius / 2f;
             oval.left = w / 2 - radius;
             oval.top = y - radius;
@@ -138,7 +140,7 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
      * 绘制贝塞尔曲线
      * 计算两圆切点...
      */
-    private void drawBezierCurve(Canvas canvas, float y, float y2) {
+    private void drawBezierCurve(Canvas canvas, float y, float y2, float circleRadius, float subCircleRadius) {
         int w = getWidth();
         mPath.reset();
         mPath.moveTo(w / 2 - circleRadius, y);
@@ -173,7 +175,6 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public void updateProgress(float progress) {
-        rotate = (int) (30 + 120 * progress);
         invalidate();
     }
 

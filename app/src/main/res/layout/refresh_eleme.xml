@@ -27,7 +27,6 @@
 
             <ImageView
                 android:id="@+id/eleme_box_l"
-
                 android:layout_width="20dp"
                 android:layout_height="3dp"
                 android:layout_alignLeft="@+id/eleme_box"
