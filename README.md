@@ -4,6 +4,9 @@
 <br>
 [============DEMO.APK=============](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.1.apk)
 <br>
+<br>
+[============CSDN_BLOG=============](http://blog.csdn.net/SakaueNachi/article/details/76536112)
+
 
 
 
