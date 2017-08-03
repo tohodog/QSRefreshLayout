@@ -2,10 +2,11 @@
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
 <br>
-[============DEMO.APK=============](https://github.com//tohodog/QSRefreshLayout/raw/master/qsrefresh-1.1.apk)
+![demo.apk](https://github.com//tohodog/QSRefreshLayout/raw/master/source/video_qrcode.png)
+扫码 demo.apk 下载
 <br>
 <br>
-[============CSDN_BLOG=============](http://blog.csdn.net/SakaueNachi/article/details/76536112)
+[CSDN_BLOG](http://blog.csdn.net/SakaueNachi/article/details/76536112)
 
 
 
