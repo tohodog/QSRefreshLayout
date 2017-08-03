@@ -1,6 +1,6 @@
 # QSRefreshLayout 
-![](https://github.com//tohodog/QSRefreshLayout/raw/master/top.gif)
-![](https://github.com//tohodog/QSRefreshLayout/raw/master/bottom.gif)
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/source/top.gif)
+![](https://github.com//tohodog/QSRefreshLayout/raw/master/source/bottom.gif)
 <br>
 ![demo.apk](https://github.com//tohodog/QSRefreshLayout/raw/master/source/video_qrcode.png)
 扫码 demo.apk 下载
