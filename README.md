@@ -3,6 +3,7 @@
 ![](https://github.com//tohodog/QSRefreshLayout/raw/master/source/bottom.gif)
 <br>
 ![demo.apk](https://github.com//tohodog/QSRefreshLayout/raw/master/source/video_qrcode.png)
+<br>
 扫码 demo.apk 下载
 <br>
 <br>
