@@ -111,6 +111,7 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
             drawBezierCurve(canvas, y, y2, circleRadius, subCircleRadius);//贝赛尔曲线
 
             //刷新图标
+            mPaint1.setStrokeWidth(circleRadius / 7);              //线宽
             int rotate = -10 + (int) (90 * pro);
             int rotatelen = 280;
             float radius = circleRadius / 2f;
@@ -120,7 +121,7 @@ public class IOSRefreshView extends FrameLayout implements IRefreshView {
             oval.bottom = y + radius;
             canvas.drawArc(oval, rotate, rotatelen, false, mPaint1);
             //三角形
-            float len = 10 * density;
+            float len = circleRadius * 0.625f;
             mArrow.reset();
             mArrow.moveTo(0, 0);
             mArrow.lineTo(len, 0);
