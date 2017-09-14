@@ -283,6 +283,8 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
 
     //刷新完成
     public void refreshComplete() {
+        if (mScrollAnimator != null)
+            mScrollAnimator.cancel();
         if (refreshStatus == STATUS_REFRESHING) {
             setRefreshStatus(STATUS_REFRESHED);
             scrollAnimation(currentOffset, 0, draggedRefreshView.completeAnimaDuration(), STATUS_NORMAL);
@@ -321,9 +323,13 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         });
     }
 
+    private ValueAnimator mScrollAnimator;
+
     //插值动画 模拟拖曳
-    protected void scrollAnimation(int start, int end, int time, final int... status) {
-        ValueAnimator mScrollAnimator = new ValueAnimator();
+    protected void scrollAnimation(final int start, final int end, final int time, final int... status) {
+        if (mScrollAnimator != null)
+            mScrollAnimator.cancel();
+        mScrollAnimator = new ValueAnimator();
         mScrollAnimator.setIntValues(start, end);
         mScrollAnimator.setInterpolator(animeInterpolator);
         mScrollAnimator.setDuration(time > 0 ? time : animaDuration);
@@ -343,11 +349,16 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (status != null)
                     for (int s : status)
                         setRefreshStatus(s);
+                mScrollAnimator = null;
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                setDragViewOffsetAndPro(end, true);
+                if (status != null)
+                    for (int s : status)
+                        setRefreshStatus(s);
+                mScrollAnimator = null;
             }
 
             @Override
