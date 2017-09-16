@@ -149,6 +149,10 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 if (mActivePointerId == MotionEvent.INVALID_POINTER_ID) {
                     return false;
                 }
+                final int index = ev.findPointerIndex(mActivePointerId);
+                if (index < 0) {
+                    return false;
+                }
                 final float y = ev.getY(mActivePointerId);
                 final float x = ev.getX(mActivePointerId);
 
