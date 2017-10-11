@@ -6,8 +6,6 @@
 <br>
 扫码 [demo.apk](https://github.com/tohodog/QSRefreshLayout/raw/master/source/qsrefresh.apk) 下载
 <br>
-<br>
-[CSDN_BLOG](http://blog.csdn.net/SakaueNachi/article/details/76536112)
 
 
 
@@ -75,6 +73,8 @@ circleImageView.setColorScheme(R.color.xxx,...);
 
 ## DIY
 实现IRefreshView接口
+<br>
+[CSDN_BLOG](http://blog.csdn.net/SakaueNachi/article/details/76536112)
 ```
     View getView();
 
