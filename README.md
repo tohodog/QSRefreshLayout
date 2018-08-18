@@ -17,6 +17,20 @@
   * 支持任意可滑动的控件
   * 更多效果更新中...
 
+Gradle
+```
+allprojects {
+    repositories {
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+dependencies {
+    implementation 'com.github.tohodog:QSRefreshLayout:1.1'
+}
+```
+
 ## XML
 ```
   <org.song.refreshlayout.QSRefreshLayout

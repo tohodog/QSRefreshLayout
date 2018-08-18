@@ -127,34 +127,42 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         return b;
     }
 
-    private int mActivePointerId;
+    private volatile int mActivePointerId = MotionEvent.INVALID_POINTER_ID;
     private float mInitialMotionY, mInitialMotionX;
 
     //是否截取事件
     private boolean handlerInterceptTouchEvent(MotionEvent ev, boolean isHead) {
         final int action = ev.getActionMasked();
         boolean mIsBeingDragged = false;
+        final int pointerIndex;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mActivePointerId = ev.getPointerId(0);
                 mIsBeingDragged = false;
-                final float initialMotionY = ev.getY(mActivePointerId);
+                if (mActivePointerId == MotionEvent.INVALID_POINTER_ID)
+                    mActivePointerId = ev.getPointerId(0);
+                pointerIndex = ev.findPointerIndex(mActivePointerId);
+                if (pointerIndex < 0) {
+                    return false;
+                }
+                final float initialMotionY = ev.getY(pointerIndex);
                 if (initialMotionY == -1) {
                     return false;
                 }
-                mInitialMotionX = ev.getX(mActivePointerId);
+                mInitialMotionX = ev.getX(pointerIndex);
                 mInitialMotionY = initialMotionY;
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mActivePointerId == MotionEvent.INVALID_POINTER_ID) {
                     return false;
                 }
-                final int index = ev.findPointerIndex(mActivePointerId);
-                if (index < 0) {
+                pointerIndex = ev.findPointerIndex(mActivePointerId);
+
+                if (pointerIndex < 0) {
                     return false;
                 }
-                final float y = ev.getY(mActivePointerId);
-                final float x = ev.getX(mActivePointerId);
+
+                final float y = ev.getY(pointerIndex);
+                final float x = ev.getX(pointerIndex);
 
                 if (y == -1) {
                     return false;
@@ -173,11 +181,16 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 mIsBeingDragged = false;
                 mActivePointerId = MotionEvent.INVALID_POINTER_ID;
                 break;
-            case MotionEvent.ACTION_POINTER_UP://兼容多个手指
-                final int pointerIndex = ev.getActionIndex();
-                final int pointerId = ev.getPointerId(pointerIndex);
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                final int index = ev.getActionIndex();
+                mActivePointerId = ev.getPointerId(index);
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                final int actionIndex = ev.getActionIndex();
+                final int pointerId = ev.getPointerId(actionIndex);
                 if (pointerId == mActivePointerId) {
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    final int newPointerIndex = actionIndex == 0 ? 1 : 0;
                     mActivePointerId = ev.getPointerId(newPointerIndex);
                 }
                 break;
@@ -219,19 +232,6 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 break;
             }
 
-            case MotionEvent.ACTION_POINTER_DOWN:
-                final int index = ev.getActionIndex();
-                mActivePointerId = ev.getPointerId(index);
-                break;
-
-            case MotionEvent.ACTION_POINTER_UP:
-                final int pointerIndex = ev.getActionIndex();
-                final int pointerId = ev.getPointerId(pointerIndex);
-                if (pointerId == mActivePointerId) {
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                    mActivePointerId = ev.getPointerId(newPointerIndex);
-                }
-                break;
 
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL: {
@@ -249,6 +249,20 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
                 mActivePointerId = MotionEvent.INVALID_POINTER_ID;
                 return false;
             }
+
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                final int index = ev.getActionIndex();
+                mActivePointerId = ev.getPointerId(index);
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                final int pointerIndex = ev.getActionIndex();
+                final int pointerId = ev.getPointerId(pointerIndex);
+                if (pointerId == mActivePointerId) {
+                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    mActivePointerId = ev.getPointerId(newPointerIndex);
+                }
+                break;
         }
 
         return true;
@@ -271,7 +285,8 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
 
         temp1 = draggedRefreshView.getTargetOffset(temp);
         temp2 = draggedRefreshView.getTargetOffset(offset);
-        mTarget.offsetTopAndBottom(temp2 - temp1);
+        if (mTarget != null)
+            mTarget.offsetTopAndBottom(temp2 - temp1);
 
         temp1 = draggedRefreshView.getThisViewOffset(temp);
         temp2 = draggedRefreshView.getThisViewOffset(offset);
@@ -337,6 +352,7 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
         mScrollAnimator.setIntValues(start, end);
         mScrollAnimator.setInterpolator(animeInterpolator);
         mScrollAnimator.setDuration(time > 0 ? time : animaDuration);
+        //mScrollAnimator.setStartDelay(0);
         mScrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
