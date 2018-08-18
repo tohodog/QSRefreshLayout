@@ -211,7 +211,7 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
 
     @Override
     public int getThisViewOffset(int offset) {
-        int de = (int) (density * 50);
+        int de = (int) (density * 50);//位移一段距离,视差效果
         if (offset < 0) {
             int t = getTargetOffset(offset);
             float f = 1 + 1.f * offset / triggerDistance();
@@ -231,7 +231,7 @@ public class ElemeRefreshView extends FrameLayout implements IRefreshView {
         offset = Math.abs(offset);
         int h = getMeasuredHeight();
         if (offset > h)
-            offset = (int) (h + (offset - h) * 0.1f);
+            offset = (int) (h + (offset - h) * 0.2f);
         return b ? offset : -offset;
     }
 
