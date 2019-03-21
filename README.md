@@ -30,6 +30,12 @@ dependencies {
     implementation 'com.github.tohodog:QSRefreshLayout:1.1.1'
 }
 ```
+框架内置4个刷新view </br>
+CircleImageView 小圆球  </br>
+BarRefreshView 变色的细条  </br>
+IOSRefreshView ios上的一款刷新view  </br>
+XMLRefreshView 就是那款经典的上下拉刷新 </br>
+其他的饿了么京东等均在demo里 </br>
 
 ## XML
 ```
