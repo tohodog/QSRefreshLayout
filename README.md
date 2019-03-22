@@ -27,7 +27,7 @@ allprojects {
     }
 }
 dependencies {
-    implementation 'com.github.tohodog:QSRefreshLayout:1.1.1'
+    implementation 'com.github.tohodog:QSRefreshLayout:1.1.3'
 }
 ```
 框架内置4个刷新view </br>
