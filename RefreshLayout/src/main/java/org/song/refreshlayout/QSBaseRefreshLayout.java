@@ -272,6 +272,8 @@ public abstract class QSBaseRefreshLayout extends ViewGroup {
     private void setDragViewOffsetAndPro(int offset, boolean requiresUpdate) {
         if (offset == currentOffset)
             return;
+        if (draggedRefreshView == null) return;
+
         int max = draggedRefreshView.maxDistance();
         if (Math.abs(offset) > max && max > 0)
             offset = offset > 0 ? max : -max;
