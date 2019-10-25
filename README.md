@@ -45,10 +45,10 @@ XMLRefreshView 就是那款经典的上下拉刷新 </br>
         android:layout_height="match_parent">
         
         <!--head-->
-        <org.song.refreshlayout.refreshview.BarRefreshView
-            android:layout_width="match_parent"
-            android:layout_height="2dp" />
-
+        <org.song.refreshlayout.refreshview.CircleImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
@@ -56,9 +56,9 @@ XMLRefreshView 就是那款经典的上下拉刷新 </br>
             android:background="#ffffff" />
             
         <!--foot-->
-        <org.song.refreshlayout.refreshview.CircleImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <org.song.refreshlayout.refreshview.BarRefreshView
+            android:layout_width="match_parent"
+            android:layout_height="2dp" />
 
     </org.song.refreshlayout.QSRefreshLayout>
 ```
@@ -66,9 +66,9 @@ XMLRefreshView 就是那款经典的上下拉刷新 </br>
 ```
 QSRefreshLayout qsRefreshLayout = (QSRefreshLayout) findViewById(R.id.qs);
 
-qsRefreshLayout.setHeadRefreshView(new CircleImageView(this));
-                    
-qsRefreshLayout.setFootRefreshView(new BarRefreshView(this));
+//XML写了 这里就不用设置
+//qsRefreshLayout.setHeadRefreshView(new CircleImageView(this));
+//qsRefreshLayout.setFootRefreshView(new BarRefreshView(this));
 
 qsRefreshLayout.enterHeadRefreshing(true);
                     
